@@ -7,14 +7,23 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Pengajuan;
 use App\Rules\ParticipantCountRule;
 use App\Rules\UniqueWeekRequest;
+use App\Models\User;
+
 
 class PengajuanController extends Controller
 {
     //
     public function index()
     {
-        $visits = Pengajuan::all();
+
+        // Get the currently logged-in user
+        $user = auth()->user();
+
+        // Retrieve the visit requests associated with the user
+        $visits = $user->pengajuans;
+
         return view('pengajuans.index', compact('visits'));
+
     }
 
     public function create()
@@ -33,7 +42,6 @@ class PengajuanController extends Controller
             'purpose' => 'required|string',
             'class' => 'required|in:TKJ,SIJA,TJA,MM,RPL,Broadcasting',
             'participant_count' => ['required', 'integer', new ParticipantCountRule],
-            'feedback_notes' => 'nullable|string',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -42,9 +50,33 @@ class PengajuanController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        Pengajuan::create($request->all());
+        $user = auth()->user();
 
-        return redirect()->route('visits.index')->with('success', 'pengajuan request created successfully.');
+        // Pengajuan::insert([
+    	// 	'visit_date' => $request->visit_date,
+    	// 	'company_name' => $request->company_name,
+    	// 	'contact_person_name' => $request->contact_person_name,
+    	// 	'contact_person_email' => $request->contact_person_email,
+    	// 	'purpose' => $request->purpose,
+    	// 	'class' => $request->class,
+    	// 	'participant_count' => $request->participant_count,
+    	// 	'user_id' => $user->id,
+    	// ]);
+
+        $visit = new Pengajuan([
+            'visit_date' => $request->visit_date,
+            'company_name' => $request->company_name,
+            'contact_person_name' => $request->contact_person_name,
+            'contact_person_email' => $request->contact_person_email,
+            'purpose' => $request->purpose,
+            'class' => $request->class,
+            'participant_count' => $request->participant_count,
+        ]);
+
+        $user->pengajuans()->save($visit);
+
+        // return redirect()->route('visits.index')->with('success', 'pengajuan request created successfully.');
+        return redirect()->route('visits.index')->with('success', 'Pengajuan request created successfully.');
     }
 
     public function edit($id)

@@ -20,9 +20,10 @@
                 </tr>
             </thead>
             <tbody>
+                @php $rowNumber = 1 @endphp
                 @foreach ($visits as $visit)
                     <tr>
-                        <td>{{ $visit->id }}</td>
+                        <td>{{ $rowNumber++ }}</td>
                         <td>{{ $visit->company_name }}</td>
                         <td>{{ $visit->visit_date }}</td>
                         <td>{{ $visit->class }}</td>

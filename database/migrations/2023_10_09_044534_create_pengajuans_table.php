@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('contact_person_email');
             $table->text('purpose');
             $table->enum('status', ['processed', 'accepted', 'rejected'])->default('processed');
-            $table->text('feedback_notes')->nullable();
             // New columns for class/group and participant count
             $table->enum('class', ['TKJ', 'SIJA', 'TJA', 'MM', 'RPL', 'Broadcasting']);
             $table->integer('participant_count')->nullable();

@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
     <div class="container">
         <h1>Create New Industrial Visit Request</h1>
@@ -15,6 +14,7 @@
         <form action="{{ route('visits.store') }}" method="POST">
             @csrf
             <input type="hidden" name="status" value="processed">
+            <input type="hidden" name="id" value="">
             <div class="form-group">
                 <label for="visit_date">Visit Date</label>
                 <input type="date" class="form-control" id="visit_date" name="visit_date" value="{{ old('visit_date') }}" required>
