@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Auth; // Import the Auth facade
 use App\Http\Controllers\PengajuanController;
+use App\Http\Controllers\AdminController;
 
 
 /*
@@ -39,6 +40,12 @@ Route::post('/visits', [PengajuanController::class, 'store'])->name('visits.stor
 Route::get('/visits/{id}/edit', [PengajuanController::class, 'edit'])->name('visits.edit');
 Route::put('/visits/{id}', [PengajuanController::class, 'update'])->name('visits.update');
 Route::delete('/visits/{id}', [PengajuanController::class, 'destroy'])->name('visits.destroy');
+
+Route::get('/admin/requests', [AdminController::class, 'index'])->name('admin.requests.index');
+Route::get('/admin/requests/{id}', [AdminController::class, 'show'])->name('admin.requests.show');
+Route::post('/admin/requests/accept', [AdminController::class, 'accept'])->name('admin.requests.accept');
+Route::post('/admin/requests/reject', [AdminController::class, 'reject'])->name('admin.requests.reject');
+
 
 // Client routes
 Route::middleware(['auth', 'role:client'])->group(function () {

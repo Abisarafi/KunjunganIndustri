@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Pengajuan;
 use App\Rules\ParticipantCountRule;
+use App\Rules\UniqueWeekRequest;
 
 class PengajuanController extends Controller
 {
@@ -25,11 +26,10 @@ class PengajuanController extends Controller
     {
         // Validation rules
         $rules = [
-            'visit_date' => 'required|date',
+            'visit_date' => ['required', 'date', new UniqueWeekRequest],
             'company_name' => 'required|string',
             'contact_person_name' => 'required|string',
             'contact_person_email' => 'required|email',
-            'contact_person_phone' => 'required|string',
             'purpose' => 'required|string',
             'class' => 'required|in:TKJ,SIJA,TJA,MM,RPL,Broadcasting',
             'participant_count' => ['required', 'integer', new ParticipantCountRule],
@@ -56,11 +56,10 @@ class PengajuanController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
-            'visit_date' => 'required|date',
+            'visit_date' => ['required', 'date', new UniqueWeekRequest],
             'company_name' => 'required|string',
             'contact_person_name' => 'required|string',
             'contact_person_email' => 'required|email',
-            'contact_person_phone' => 'required|string',
             'purpose' => 'required|string',
             'class' => 'required|in:TKJ,SIJA,TJA,MM,RPL,Broadcasting',
             'participant_count' => ['required', 'integer', new ParticipantCountRule],
