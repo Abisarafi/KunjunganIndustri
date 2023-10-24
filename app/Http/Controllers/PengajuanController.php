@@ -8,6 +8,7 @@ use App\Models\Pengajuan;
 use App\Rules\ParticipantCountRule;
 use App\Rules\UniqueWeekRequest;
 use App\Models\User;
+use App\Models\Booking;
 
 
 class PengajuanController extends Controller
@@ -79,6 +80,54 @@ class PengajuanController extends Controller
         return redirect()->route('visits.index')->with('success', 'Pengajuan request created successfully.');
     }
 
+    public function storePengajuan(Request $request)
+{
+    $request->validate([
+        'title' => 'required|string',
+        'company_name' => 'required|string',
+        'visit_date' => 'required|string',
+        'class' => 'required|string',
+        'participant_count' => 'required|string',
+    ]);
+
+    $booking = Booking::create([
+        'title' => $request->title,
+        'start_date' => $request->start_date,
+        'end_date' => $request->end_date,
+    ]);
+
+    $pengajuan = Pengajuan::create([
+        'company_name' => $request->company_name,
+        'visit_date' => $request->visit_date,
+        'class' => $request->class,
+        'participant_count' => $request->participant_count,
+    ]);
+
+    $color = null;
+
+    if ($booking->title == 'Test') {
+        $color = '#924ACE';
+    }
+
+    return response()->json([
+        'booking' => [
+            'id' => $booking->id,
+            'start' => $booking->start_date,
+            'end' => $booking->end_date,
+            'title' => $booking->title,
+            'color' => $color ? $color : '',
+        ],
+        'pengajuan' => [
+            'id' => $pengajuan->id,
+            'company_name' => $pengajuan->company_name,
+            'visit_date' => $pengajuan->visit_date,
+            'class' => $pengajuan->class,
+            'participant_count' => $pengajuan->participant_count,
+        ],
+    ]);
+}
+
+
     public function edit($id)
     {
         $visit = Pengajuan::find($id);
@@ -116,5 +165,29 @@ class PengajuanController extends Controller
         $visit->delete();
 
         return redirect()->route('visits.index')->with('success', 'Visit request deleted successfully.');
+    }
+    public function destroyPengajuan($id)
+    {
+        $booking = Booking::find($id);
+
+        if (! $booking) {
+            return response()->json([
+                'error' => 'Unable to locate the event'
+            ], 404);
+        }
+
+        // Retrieve the associated Pengajuan record
+        $pengajuan = Pengajuan::where('booking_id', $booking->id)->first();
+
+        if ($pengajuan) {
+            $pengajuan->delete();
+        }
+
+        // Delete the Booking record
+        $booking->delete();
+
+        return response()->json([
+            'message' => 'Event and associated data have been deleted successfully'
+        ]);
     }
 }

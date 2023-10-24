@@ -8,5 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Booking extends Model
 {
     use HasFactory;
-    protected $fillable = ['title', 'start_date', 'end_date'];
+    protected $fillable = [
+        'title', 
+        'class', 
+        'participant_count', 
+        'start_date', 
+        'end_date',
+        'status',
+    ];
+
+    // public function pengajuan()
+    // {
+    //     return $this->hasOne(Pengajuan::class, 'booking_id');
+    // }
 }
+

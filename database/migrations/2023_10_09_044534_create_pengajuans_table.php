@@ -24,6 +24,8 @@ return new class extends Migration
             $table->integer('participant_count')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+            // $table->unsignedBigInteger('booking_id')->nullable();
+            // $table->foreign('booking_id')->references('id')->on('bookings');
             $table->timestamps();
         });
     }

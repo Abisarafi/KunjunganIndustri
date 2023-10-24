@@ -19,4 +19,9 @@ class Pengajuan extends Model
         'class',
         'participant_count'
     ];
+
+    // public function booking()
+    // {
+    //     return $this->belongsTo(Booking::class, 'booking_id');
+    // }
 }

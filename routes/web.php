@@ -86,3 +86,13 @@ Route::post('books', [BookController::class, 'store'])->name('books.store');
 Route::get('/export-db', function() {
     return "Exporting";
 });
+
+
+// Route::get('admin/calendar/index', [AdminController::class, 'index'])->name('admin.calendar.index');
+// // Route::patch('calendar/change-status/{id}', [AdminController::class, 'changeBookingStatus'])->name('calendar.changeStatus');
+// Route::get('calendar/show/{id}', [AdminController::class, 'changeStatus'])->name('calendar.show');
+// // Route::post('admin/calendar/status', [AdminController::class, 'updateBookingStatus'])->name('admin.calendar.status');
+Route::get('admin/calendar/index', [AdminController::class, 'index'])->name('admin.calendar.index');
+Route::get('calendar/show/{id}', [AdminController::class, 'changeStatus'])->name('calendar.show');
+Route::post('admin/calendar/status', [AdminController::class, 'updateBookingStatus'])->name('admin.calendar.status');
+Route::post('/admin/calendar/update-booking-status', [AdminController::class, 'updateBookingStatus'])->name('admin.calendar.update-booking-status');
