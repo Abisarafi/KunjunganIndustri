@@ -10,7 +10,7 @@ class Booking extends Model
     use HasFactory;
     protected $fillable = [
         'title', 
-        'class', 
+        'jurusan', 
         'participant_count', 
         'start_date', 
         'end_date',

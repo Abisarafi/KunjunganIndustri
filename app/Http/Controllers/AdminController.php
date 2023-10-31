@@ -30,7 +30,7 @@ class AdminController extends Controller
             $events[] = [
                 'id'   => $booking->id,
                 'title' => $booking->title,
-                'class' => $booking->kelas,
+                'jurusan' => $booking->jurusan,
                 'participant_count' => $booking->participant_count,
                 'start' => $booking->start_date,
                 'end' => $booking->end_date,
@@ -82,23 +82,37 @@ class AdminController extends Controller
         return view('admin.requests.show', compact('request'));
     }
 
-    // Accept a client's request
     public function accept(Request $request)
     {
-        $id = $request->input('request_id');
-        $request = Pengajuan::find($id);
-        $request->status = 'accepted';
-        $request->save();
-        return redirect()->route('admin.requests.index')->with('success', 'Request accepted successfully');
+        $bookingId = $request->input('booking_id');
+        $status = 'accepted'; // You can set the status directly
+
+        $booking = Booking::find($bookingId);
+
+        if (!$booking) {
+            return response()->json(['error' => 'Booking not found'], 404);
+        }
+
+        $booking->status = $status;
+        $booking->save();
+
+        return response()->json(['status' => $status]);
     }
 
-    // Reject a client's request
     public function reject(Request $request)
     {
-        $id = $request->input('request_id');
-        $request = Pengajuan::find($id);
-        $request->status = 'rejected';
-        $request->save();
-        return redirect()->route('admin.requests.index')->with('success', 'Request rejected');
+        $bookingId = $request->input('booking_id');
+        $status = 'rejected'; // You can set the status directly
+
+        $booking = Booking::find($bookingId);
+
+        if (!$booking) {
+            return response()->json(['error' => 'Booking not found'], 404);
+        }
+
+        $booking->status = $status;
+        $booking->save();
+
+        return response()->json(['status' => $status]);
     }
 }

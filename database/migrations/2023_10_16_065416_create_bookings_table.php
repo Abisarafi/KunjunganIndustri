@@ -16,7 +16,7 @@ class CreateBookingsTable extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->enum('class', ['TKJ', 'SIJA', 'TJA', 'MM', 'RPL', 'Broadcasting']);
+            $table->enum('jurusan', ['TKJ', 'SIJA', 'TJA', 'MM', 'RPL', 'Broadcasting']);
             $table->enum('participant_count', ['1', '2']);
             $table->dateTime('start_date');
             $table->dateTime('end_date');

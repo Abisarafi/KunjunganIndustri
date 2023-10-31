@@ -98,8 +98,8 @@
         </div>
         <div class="modal-body">
             <input type="text" class="form-control" id="title" placeholder="Nama Sekolah" name="title">
-            <select class="form-control" id="kelas" name="kelas" required>
-                <option value="" disabled selected>Jenis Kelas</option>
+            <select class="form-control" id="jurusan" name="jurusan" required>
+                <option value="" disabled selected>Jurusan</option>
                 <option value="TKJ">TKJ</option>
                 <option value="SIJA">SIJA</option>
                 <option value="TJA">TJA</option>
@@ -170,50 +170,120 @@
                 events: booking,
                 selectable: true,
                 selectHelper: true,
-                select: function(start, end, allDays) {
-                    $('#bookingModal').modal('toggle');
+                // select: function(start, end, allDays) {
+                //     $('#bookingModal').modal('toggle');
 
-                    $('#saveBtn').click(function() {
-                        var title = $('#title').val();
-                        var kelas = $('#kelas').val();
-                        var participant_count = $('#participant_count').val();
-                        var start_date = moment(start).format('YYYY-MM-DD');
-                        var end_date = moment(end).format('YYYY-MM-DD');
+                //     $('#saveBtn').click(function() {
+                //         var title = $('#title').val();
+                //         var jurusan = $('#jurusan').val();
+                //         var participant_count = $('#participant_count').val();
+                //         var start_date = moment(start).format('YYYY-MM-DD');
+                //         var end_date = moment(end).format('YYYY-MM-DD');
 
-                        $.ajax({
-                            url:"{{ route('calendar.store') }}",
-                            type:"POST",
-                            dataType:'json',
-                            data: { 
-                                title,
-                                start_date,
-                                end_date,
-                                kelas,
-                                participant_count,
-                            },
-                            success:function(response)
-                            {
-                                $('#bookingModal').modal('hide')
-                                $('#calendar').fullCalendar('renderEvent', {
-                                    'title': response.title,
-                                    'kelas': response.kelas, // Updated variable name
-                                    'participant_count': response.participant_count, // Updated variable name
-                                    'start' : response.start,
-                                    'end'  : response.end,
-                                    'color' : response.color
-                                });
+                //         $.ajax({
+                //             url:"{{ route('calendar.store') }}",
+                //             type:"POST",
+                //             dataType:'json',
+                //             data: { 
+                //                 title,
+                //                 start_date,
+                //                 end_date,
+                //                 jurusan,
+                //                 participant_count,
+                //             },
+                //             success:function(response)
+                //             {
+                //                 $('#bookingModal').modal('hide')
+                //                 $('#calendar').fullCalendar('renderEvent', {
+                //                     'title': response.title,
+                //                     'jurusan': response.jurusan, // Updated variable name
+                //                     'participant_count': response.participant_count, // Updated variable name
+                //                     'start' : response.start,
+                //                     'end'  : response.end,
+                //                     'color' : response.color
+                //                 });
 
-                            },
-                            error:function(error)
-                            {
-                                if(error.responseJSON.errors) {
-                                    $('#titleError').html(error.responseJSON.errors.title);
+                //             },
+                //             error:function(error)
+                //             {
+                //                 if(error.responseJSON.errors) {
+                //                     $('#titleError').html(error.responseJSON.errors.title);
                                    
-                                }
-                            },
-                        });
+                //                 }
+                //             },
+                //         });
+                //     });
+                // },
+                select: function(start, end, allDays) {
+                var selectedWeekStart = moment(start).startOf('week');
+                var selectedWeekEnd = moment(end).endOf('week');
+                var bookingAllowed = false;
+
+                // Check if booking is allowed for the selected week
+                $.ajax({
+                    url: "{{ route('calendar.check-accepted-bookings') }}",
+                    type: "GET",
+                    dataType: 'json',
+                    data: {
+                        start: selectedWeekStart.format('YYYY-MM-DD'),
+                        end: selectedWeekEnd.format('YYYY-MM-DD'),
+                    },
+                    success: function(response) {
+                        bookingAllowed = !response.hasAcceptedBookings;
+                    },
+                    error: function(error) {
+                        console.error(error);
+                    },
+                    complete: function() {
+                        if (bookingAllowed) {
+                            // Show the booking modal
+                            $('#bookingModal').modal('toggle');
+                        } else {
+                            // Show a popup message indicating that booking is not allowed
+                            alert('Booking is not allowed in a week with accepted bookings.');
+                        }
+                    }
+                });
+                
+                // Booking submission logic
+                $('#saveBtn').click(function() {
+                    var title = $('#title').val();
+                    var jurusan = $('#jurusan').val();
+                    var participant_count = $('#participant_count').val();
+                    var start_date = moment(start).format('YYYY-MM-DD');
+                    var end_date = moment(end).format('YYYY-MM-DD');
+
+                    $.ajax({
+                        url: "{{ route('calendar.store') }}",
+                        type: "POST",
+                        dataType: 'json',
+                        data: { 
+                            title,
+                            start_date,
+                            end_date,
+                            jurusan,
+                            participant_count,
+                        },
+                        success: function(response) {
+                            $('#bookingModal').modal('hide');
+                            $('#calendar').fullCalendar('renderEvent', {
+                                'title': response.title,
+                                'jurusan': response.jurusan,
+                                'participant_count': response.participant_count,
+                                'start': response.start,
+                                'end': response.end,
+                                'color': response.color
+                            });
+                        },
+                        error: function(error) {
+                            if (error.responseJSON.errors) {
+                                $('#titleError').html(error.responseJSON.errors.title);
+                            }
+                        },
                     });
-                },
+                });
+            },
+
                 editable: true,
                 eventDrop: function(event) {
                     var id = event.id;

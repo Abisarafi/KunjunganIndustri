@@ -15,6 +15,10 @@ class ClientMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        if (auth()->check() && auth()->user()->role === 'client') {
+            return $next($request);
+        }
+    
+        return redirect('/'); // Redirect unauthorized users
     }
 }

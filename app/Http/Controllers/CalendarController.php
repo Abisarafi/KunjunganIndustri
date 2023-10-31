@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Rules\ParticipantCountRule;
+use Illuminate\Support\Carbon;
 
 class CalendarController extends Controller
 {
@@ -32,7 +33,7 @@ class CalendarController extends Controller
             $events[] = [
                 'id'   => $booking->id,
                 'title' => $booking->title,
-                'class' => $booking->kelas,
+                'jurusan' => $booking->jurusan,
                 'status' => $booking->status,
                 'participant_count' => $booking->participant_count,
                 'start' => $booking->start_date,
@@ -46,13 +47,13 @@ class CalendarController extends Controller
     {
         $request->validate([
             'title' => 'required|string',
-            'kelas' => 'required|in:TKJ,SIJA,TJA,MM,RPL,Broadcasting',
+            'jurusan' => 'required|in:TKJ,SIJA,TJA,MM,RPL,Broadcasting',
             'participant_count' => 'required|in:1,2',
         ]);
 
         $booking = Booking::create([
             'title' => $request->title,
-            'class' => $request->kelas,
+            'jurusan' => $request->jurusan,
             'participant_count' => $request->participant_count,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
@@ -66,7 +67,7 @@ class CalendarController extends Controller
         //     'contact_person_name' => $request->contact_person_name,
         //     'contact_person_email' => $request->contact_person_email,
         //     'purpose' => $request->purpose,
-        //     'class' => $request->class,
+        //     'jurusan' => $request->jurusan,
         //     'participant_count' => $request->participant_count,
         // ]);
 
@@ -87,7 +88,7 @@ class CalendarController extends Controller
             'end' => $booking->end_date,
             'title' => $booking->title,
             'participant_count' => $booking->participant_count,
-            'class' => $booking->kelas,
+            'jurusan' => $booking->jurusan,
             'color' => $color ? $color: '',
 
         ]);
@@ -118,5 +119,18 @@ class CalendarController extends Controller
         }
         $booking->delete();
         return $id;
+    }
+
+    public function checkAcceptedBookings(Request $request)
+    {
+        $start = Carbon::parse($request->input('start'));
+        $end = Carbon::parse($request->input('end'));
+
+        $hasAcceptedBookings = Booking::where('status', 'accepted')
+            ->where('start_date', '>=', $start)
+            ->where('end_date', '<=', $end)
+            ->exists();
+
+        return response()->json(['hasAcceptedBookings' => $hasAcceptedBookings]);
     }
 }

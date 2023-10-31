@@ -134,21 +134,19 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="bookingDetailsModalLabel">Booking Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p><strong>Title:</strong> <span id="booking-title"></span></p>
-                    <p><strong>Class:</strong> <span id="booking-class"></span></p>
-                    <p><strong>Participant Count:</strong> <span id="booking-participant-count"></span></p>
-                    <p><strong>Start Date:</strong> <span id="booking-start"></span></p>
-                    <p><strong>End Date:</strong> <span id="booking-end"></span></p>
+                    <p><strong>Sekolah :</strong> <span id="booking-title"></span></p>
+                    <p><strong>Jurusan :</strong> <span id="booking-jurusan"></span></p>
+                    <p><strong>Jumlah:</strong> <span id="booking-participant-count"></span></p>
+                    <p><strong>Tanggal :</strong> <span id="booking-start"></span></p>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success" id="accept-booking">Accept</button>
                     <button type="button" class="btn btn-danger" id="reject-booking">Reject</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -172,53 +170,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
     <script>
-        // // Define a function to change the status of a booking
-        // function updateBookingStatus(bookingId, status) {
-        //     $.ajax({
-        //         url: "{{ route('admin.calendar.status') }}", // Use the new route name
-        //         type: "POST",
-        //         dataType: 'json',
-        //         data: {
-        //             booking_id: bookingId,
-        //             status: status, // You can pass 'accepted' or 'rejected'
-        //         },
-        //         success: function (response) {
-        //             // Handle success, e.g., close the modal, update the event, etc.
-        //             $('#bookingDetailsModal').modal('hide');
-        //             // Update the event on the calendar based on the new status
-        //             // (e.g., change the event color or other visual indicator)
-        //         },
-        //         error: function (error) {
-        //             console.log(error);
-        //         },
-        //     });
-        // }
-
-        // // Define the changeBookingStatus function
-        // function updateBookingStatus(id, newStatus) {
-        //     // Make an AJAX request to change the booking status
-        //     $.ajax({
-        //         url: "{{ route('admin.calendar.status') }}",
-        //         type: "POST",
-        //         dataType: 'json',
-        //         data: {
-        //             id: id,
-        //             newStatus: newStatus,
-        //         },
-        //         success: function(response) {
-        //             // Handle success, e.g., update the event in the calendar
-        //             $('#calendar').fullCalendar('refetchEvents');
-        //             $('#bookingDetailsModal').modal('hide');
-        //         },
-        //         error: function(error) {
-        //             // Handle errors
-        //             console.log(error);
-        //         },
-        //     });
-        // }
-
+       
 
         $(document).ready(function() {
+
+            
 
             $.ajaxSetup({
                 headers: {
@@ -227,7 +183,6 @@
             });
 
             var booking = @json($events);
-
              var bookingId; // Define a variable to store the selected booking ID
 
             $('#calendar').fullCalendar({
@@ -241,57 +196,14 @@
                 selectHelper: true,
                 editable: true,
 
-                // select: function(start, end, allDays) {
-                //     $('#bookingDetailsModal').modal('toggle');
-
-                //     $('#saveBtn').click(function() {
-                //         var title = $('#title').val();
-                //         var kelas = $('#kelas').val();
-                //         var participant_count = $('#participant_count').val();
-                //         var start_date = moment(start).format('YYYY-MM-DD');
-                //         var end_date = moment(end).format('YYYY-MM-DD');
-
-                //         $.ajax({
-                //             url:"{{ route('calendar.store') }}",
-                //             type:"POST",
-                //             dataType:'json',
-                //             data: { 
-                //                 title,
-                //                 start_date,
-                //                 end_date,
-                //                 kelas,
-                //                 participant_count,
-                //             },
-                //             success:function(response)
-                //             {
-                //                 $('#bookingDetailsModal').modal('hide')
-                //                 $('#calendar').fullCalendar('renderEvent', {
-                //                     'title': response.title,
-                //                     'kelas': response.kelas, // Updated variable name
-                //                     'participant_count': response.participant_count, // Updated variable name
-                //                     'start' : response.start,
-                //                     'end'  : response.end,
-                //                     'color' : response.color
-                //                 });
-
-                //             },
-                //             error:function(error)
-                //             {
-                //                 if(error.responseJSON.errors) {
-                //                     $('#titleError').html(error.responseJSON.errors.title);
-                                   
-                //                 }
-                //             },
-                //         });
-                //     });
-                // },
                 
 
                 // event click
                 eventClick: function(event) {
                 var id = event.id;
+                bookingId = event.id; // Store the selected booking ID when an event is clicked
                 var title = event.title;
-                var kelas = event.class;
+                var jurusan = event.jurusan;
                 var participant_count = event.participant_count;
                 var start_date = event.start.format('YYYY-MM-DD');
                 var end_date = event.end.format('YYYY-MM-DD');
@@ -302,65 +214,29 @@
                 // Populate your modal with the event details
                 $('#bookingDetailsModal').modal('show');
                 $('#booking-title').text(title);
-                $('#booking-class').text(kelas);
+                $('#booking-jurusan').text(jurusan);
                 $('#booking-participant-count').text(participant_count);
                 $('#booking-start').text(start_date);
-                $('#booking-end').text(end_date);
 
                 
 
                 // Handle the "Accept" button click
-                $('#accept-booking').click(function () {
-                    var status = $('#accept-booking').val();
-
-                    $.ajax({
-                        url:"{{  route('admin.calendar.update-booking-status') }}",
-                        type:"POST",
-                        dataType:'json',
-                        data: {
-                            status
-                        },
-                        success:function(response)
-                            {
-                                $('#bookingDetailsModal').modal('hide')
-                                $('#calendar').fullCalendar('renderEvent', {
-                                    'status': response.status,
-                                });
-
-                            },
-                            error: function(error) {
-                                // Handle errors
-                                console.log(error);
-                            },
-
-                    })
+                $('#accept-booking').click(function() {
+                    var status = 'accepted'; // Set status as 'accepted'
+                    updateBookingStatus(bookingId, status);
+                    $('#bookingDetailsModal').modal('hide'); // Hide the modal here
                 });
 
-                // Handle the "Accept" button click
-                $('#reject-booking').click(function () {
-                    var status = $('#reject-booking').val();
+                // Handle the "Reject" button click
+                $('#reject-booking').click(function() {
+                    var status = 'rejected'; // Set status as 'rejected'
+                    updateBookingStatus(bookingId, status);
+                    $('#bookingDetailsModal').modal('hide'); // Hide the modal here
+                });
 
-                    $.ajax({
-                        url:"{{  route('admin.calendar.update-booking-status') }}",
-                        type:"POST",
-                        dataType:'json',
-                        data: {
-                            status
-                        },
-                        success:function(response)
-                            {
-                                $('#bookingDetailsModal').modal('hide')
-                                $('#calendar').fullCalendar('renderEvent', {
-                                    'status': response.status,
-                                });
-
-                            },
-                            error: function(error) {
-                                // Handle errors
-                                console.log(error);
-                            },
-
-                    })
+                // Handle the "x" button click
+                $('#close').click(function() {
+                    $('#bookingDetailsModal').modal('hide'); // Hide the modal here
                 });
 
                 // // Handle the "Accept" button click
@@ -411,15 +287,16 @@
                 //     });
                 // });
 
-                // Handle the "Accept" button click
-                $('#accept-booking').click(function () {
-                    updateBookingStatus(bookingId, 'accepted'); // Call your function with 'accepted' status
-                });
+                // // Handle the "Accept" button click
+                // $('#accept-booking').click(function () {
+                //     updateBookingStatus(bookingId, 'accepted'); // Call your function with 'accepted' status
+                // });
 
-                // Handle the "Reject" button click
-                $('#reject-booking').click(function () {
-                    updateBookingStatus(bookingId, 'rejected'); // Call your function with 'rejected' status
-                });
+                // // Handle the "Reject" button click
+                // $('#reject-booking').click(function () {
+                //     updateBookingStatus(bookingId, 'rejected'); // Call your function with 'rejected' status
+                // });
+                // Close the modal when either button is clicked
 
             },
 
@@ -433,10 +310,31 @@
 
             });
 
+            // Function to update booking status
+            function updateBookingStatus(bookingId, status) {
+                $.ajax({
+                    url: status === 'accepted' ? "{{ route('admin.calendar.accept') }}" : "{{ route('admin.calendar.reject') }}",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        booking_id: bookingId,
+                        status: status
+                    },
+                    success: function(response) {
+                        // Handle success, e.g., update the UI
+                        console.log(response);
+                    },
+                    error: function(error) {
+                        // Handle errors
+                        console.error(error);
+                    }
+                });
+            }
 
-            $("#bookingDetailsModal").on("hidden.bs.modal", function () {
-                $('#saveBtn').unbind();
-            });
+
+            // $("#bookingDetailsModal").on("hidden.bs.modal", function () {
+            //     $('#saveBtn').unbind();
+            // });
 
             $('.fc-event').css('font-size', '13px');
             $('.fc-event').css('width', '20px');
