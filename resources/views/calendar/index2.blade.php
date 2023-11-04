@@ -108,7 +108,7 @@
                 <option value="Broadcasting">Broadcasting</option>
             </select>
             <select class="form-control" id="participant_count" name="participant_count" required>
-                <option value="" disabled selected>Jumlah Kelas</option>
+                <option value="" disabled selected>Jumlah Kelas (1 kelas max 30 orang)</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
             </select>
@@ -125,7 +125,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h3 class="text-center mt-5">FullCalendar js Laravel series with Career Development Lab</h3>
+                <h3 class="text-center mt-5">Aplikasi Kunjungan Industri SIMS Lifemedia</h3>
                 <div class="col-md-11 offset-1 mt-5 mb-5">
                     <div id="calendar"></div>
                 </div>
@@ -133,20 +133,7 @@
         </div>
     </div>
 
-    {{-- <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h3 class="text-center mt-5">FullCalendar js Laravel series with Career Development Lab</h3>
-                <div class="col-md-11 offset-1 mt-5 mb-5">
-
-                    <div id="calendar">
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div> --}}
+    
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
@@ -283,28 +270,7 @@
                     });
                 });
             },
-
-                editable: true,
-                eventDrop: function(event) {
-                    var id = event.id;
-                    var start_date = moment(event.start).format('YYYY-MM-DD');
-                    var end_date = moment(event.end).format('YYYY-MM-DD');
-
-                    $.ajax({
-                            url:"{{ route('calendar.update', '') }}" +'/'+ id,
-                            type:"PATCH",
-                            dataType:'json',
-                            data:{ start_date, end_date  },
-                            success:function(response)
-                            {
-                                swal("Good job!", "Event Updated!", "success");
-                            },
-                            error:function(error)
-                            {
-                                console.log(error)
-                            },
-                        });
-                },
+               
                 eventClick: function(event){
                     var id = event.id;
 

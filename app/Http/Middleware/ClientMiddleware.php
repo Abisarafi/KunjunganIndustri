@@ -19,6 +19,6 @@ class ClientMiddleware
             return $next($request);
         }
     
-        return redirect('/'); // Redirect unauthorized users
+        return back()->with('error', 'Unauthorized'); // Redirect back with an error message
     }
 }

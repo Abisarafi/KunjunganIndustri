@@ -15,6 +15,8 @@ class Booking extends Model
         'start_date', 
         'end_date',
         'status',
+        'user_id',
+        'color',
     ];
 
     // public function pengajuan()

@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Validator;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,16 +23,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Role::create(['name' => 'client']);
-        // Role::create(['name' => 'admin']);
-
-        // Permission::create(['name' => 'submit industrial visit request']);
-        // Permission::create(['name' => 'manage industrial visit requests']);
-
-        // $clientRole = Role::findByName('client');
-        // $adminRole = Role::findByName('admin');
-
-        // $clientRole->givePermissionTo('submit industrial visit request');
-        // $adminRole->givePermissionTo('manage industrial visit requests');
+        Validator::extend('participant_count', function ($attribute, $value, $parameters, $validator) {
+            $jurusan = $validator->getData()['jurusan'];
+            if (in_array($jurusan, ['TKJ', 'TJA', 'SIJA']) && in_array($value, [1, 2])) {
+                return true;
+            }
+            if (in_array($jurusan, ['RPL', 'Broadcasting', 'MM']) && $value == 1) {
+                return true;
+            }
+            return false;
+        });
     }
 }

@@ -34,7 +34,6 @@ Route::post('/register', [RegisterController::class, 'register']);
 
 Auth::routes();
 
-Route::get('/home', [CalendarController::class, 'index'])->name('home');
 
 
 
@@ -48,7 +47,6 @@ Route::group(['middleware' => 'client'], function () {
     Route::get('calendar/index', [CalendarController::class, 'index'])->name('calendar.index');
     Route::post('calendar', [CalendarController::class, 'store'])->name('calendar.store');
     Route::post('postPengajuan', [CalendarController::class, 'storePengajuan'])->name('calendar.storePengajuan');
-    Route::patch('calendar/update/{id}', [CalendarController::class, 'update'])->name('calendar.update');
     Route::delete('calendar/destroy/{id}', [CalendarController::class, 'destroy'])->name('calendar.destroy');
     Route::delete('pengajuan/destroy/{id}', [CalendarController::class, 'destroyPengajuan'])->name('calendar.destroyPengajuan');
     Route::get('calendar/check-accepted-bookings', [CalendarController::class, 'checkAcceptedBookings'])->name('calendar.check-accepted-bookings');

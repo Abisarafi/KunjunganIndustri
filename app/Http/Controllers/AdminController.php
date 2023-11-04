@@ -20,11 +20,11 @@ class AdminController extends Controller
         $bookings = Booking::all();
         foreach($bookings as $booking) {
             $color = null;
-            if($booking->title == 'Test') {
-                $color = '#924ACE';
+            if ($booking->status == 'rejected') {
+                $color = '#FF3B28';
             }
-            if($booking->title == 'Test 1') {
-                $color = '#68B01A';
+            if ($booking->title == 'accepted') {
+                $color = '#48EB12';
             }
 
             $events[] = [
@@ -40,23 +40,6 @@ class AdminController extends Controller
         return view('admin.index2', ['events' => $events]);
     }
 
-    // mengubah status pengajuan 2
-    // public function updateBookingStatus(Request $request)
-    //     {
-    //         $bookingId = $request->input('booking_id');
-    //         $status = $request->input('status');
-
-    //         $booking = Booking::find($bookingId);
-            
-    //         if (!$booking) {
-    //             return response()->json(['error' => 'Booking not found'], 404);
-    //         }
-
-    //         $booking->status = $status;
-    //         $booking->save();
-
-    //         return response()->json(['message' => 'Booking status updated successfully']);
-    //     }
 
     public function updateBookingStatus(Request $request)
     {
@@ -86,6 +69,7 @@ class AdminController extends Controller
     {
         $bookingId = $request->input('booking_id');
         $status = 'accepted'; // You can set the status directly
+        $color = '#48EB12';
 
         $booking = Booking::find($bookingId);
 
@@ -94,15 +78,22 @@ class AdminController extends Controller
         }
 
         $booking->status = $status;
+        $booking->color = $color;
         $booking->save();
 
-        return response()->json(['status' => $status]);
+        return response()->json(
+            [
+                'status' => $status,
+                'color' => $color,
+                ]
+        );
     }
 
     public function reject(Request $request)
     {
         $bookingId = $request->input('booking_id');
         $status = 'rejected'; // You can set the status directly
+        $color = '#FF3B28';
 
         $booking = Booking::find($bookingId);
 
@@ -111,8 +102,14 @@ class AdminController extends Controller
         }
 
         $booking->status = $status;
+        $booking->color = $color;
         $booking->save();
 
-        return response()->json(['status' => $status]);
+        return response()->json(
+            [
+                'status' => $status,
+                'color' => $color,
+                ]
+        );
     }
 }
