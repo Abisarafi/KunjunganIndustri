@@ -108,7 +108,7 @@
                 <option value="Broadcasting">Broadcasting</option>
             </select>
             <select class="form-control" id="participant_count" name="participant_count" required>
-                <option value="" disabled selected>Jumlah Kelas</option>
+                <option value="" disabled selected>Jumlah Kelas (1 kelas max 30 orang)</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
             </select>
@@ -125,7 +125,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h3 class="text-center mt-5">FullCalendar js Laravel series with Career Development Lab</h3>
+                <h3 class="text-center mt-5">Aplikasi Kunjungan Industri SIMS Lifemedia</h3>
                 <div class="col-md-11 offset-1 mt-5 mb-5">
                     <div id="calendar"></div>
                 </div>
@@ -133,20 +133,7 @@
         </div>
     </div>
 
-    {{-- <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h3 class="text-center mt-5">FullCalendar js Laravel series with Career Development Lab</h3>
-                <div class="col-md-11 offset-1 mt-5 mb-5">
-
-                    <div id="calendar">
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div> --}}
+    
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
@@ -218,32 +205,41 @@
                 var selectedWeekStart = moment(start).startOf('week');
                 var selectedWeekEnd = moment(end).endOf('week');
                 var bookingAllowed = false;
+                var selectedStartDate = $('#start_date').val();
+                var selectedWeekday = moment(selectedStartDate).isoWeekday(); // Get the ISO weekday (1 = Monday, 7 = Sunday)
 
-                // Check if booking is allowed for the selected week
+
                 $.ajax({
-                    url: "{{ route('calendar.check-accepted-bookings') }}",
+                    url: "{{ route('calendar.check') }}",
                     type: "GET",
                     dataType: 'json',
                     data: {
                         start: selectedWeekStart.format('YYYY-MM-DD'),
                         end: selectedWeekEnd.format('YYYY-MM-DD'),
+                        start_date: selectedStartDate,
                     },
                     success: function(response) {
                         bookingAllowed = !response.hasAcceptedBookings;
+                        isWeekend = !response.isWeekend;
                     },
                     error: function(error) {
                         console.error(error);
                     },
                     complete: function() {
-                        if (bookingAllowed) {
+                        if (isWeekend) {
+                            if (bookingAllowed) {
                             // Show the booking modal
                             $('#bookingModal').modal('toggle');
-                        } else {
-                            // Show a popup message indicating that booking is not allowed
-                            alert('Booking is not allowed in a week with accepted bookings.');
-                        }
+                            } else {
+                                // Show a popup message indicating that booking is not allowed
+                                alert('Booking is not allowed in a week with accepted bookings.');
+                            }
+                    } else {
+                        // Show a popup message indicating that booking is not allowed
+                        alert('Booking is not allowed in a weekends.');
                     }
-                });
+                }
+            });
                 
                 // Booking submission logic
                 $('#saveBtn').click(function() {
@@ -272,8 +268,10 @@
                                 'participant_count': response.participant_count,
                                 'start': response.start,
                                 'end': response.end,
-                                'color': response.color
+                                // 'color': response.color
                             });
+                            location.reload();
+                            
                         },
                         error: function(error) {
                             if (error.responseJSON.errors) {
@@ -283,49 +281,24 @@
                     });
                 });
             },
+               
+            eventClick: function(event) {
+                var id = event.id; // Get the event ID from the clicked event
 
-                editable: true,
-                eventDrop: function(event) {
-                    var id = event.id;
-                    var start_date = moment(event.start).format('YYYY-MM-DD');
-                    var end_date = moment(event.end).format('YYYY-MM-DD');
-
+                if (confirm('Are you sure want to remove it')) {
                     $.ajax({
-                            url:"{{ route('calendar.update', '') }}" +'/'+ id,
-                            type:"PATCH",
-                            dataType:'json',
-                            data:{ start_date, end_date  },
-                            success:function(response)
-                            {
-                                swal("Good job!", "Event Updated!", "success");
-                            },
-                            error:function(error)
-                            {
-                                console.log(error)
-                            },
-                        });
-                },
-                eventClick: function(event){
-                    var id = event.id;
-
-                    if(confirm('Are you sure want to remove it')){
-                        $.ajax({
-                            url:"{{ route('calendar.destroy', '') }}" +'/'+ id,
-                            type:"DELETE",
-                            dataType:'json',
-                            success:function(response)
-                            {
-                                $('#calendar').fullCalendar('removeEvents', response);
-                                // swal("Good job!", "Event Deleted!", "success");
-                            },
-                            error:function(error)
-                            {
-                                console.log(error)
-                            },
-                        });
-                    }
-
-                },
+                        url: "{{ route('calendar.destroy', '') }}" + '/' + id, // Use the correct event ID
+                        type: "DELETE",
+                        dataType: 'json',
+                        success: function (response) {
+                            $('#calendar').fullCalendar('removeEvents', response);
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        },
+                    });
+                }
+            },
                 selectAllow: function(event)
                 {
                     return moment(event.start).utcOffset(false).isSame(moment(event.end).subtract(1, 'second').utcOffset(false), 'day');

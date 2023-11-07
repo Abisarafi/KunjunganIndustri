@@ -15,6 +15,7 @@ class Booking extends Model
         'start_date', 
         'end_date',
         'status',
+        'user_id',
     ];
 
     // public function pengajuan()
@@ -22,4 +23,3 @@ class Booking extends Model
     //     return $this->hasOne(Pengajuan::class, 'booking_id');
     // }
 }
-

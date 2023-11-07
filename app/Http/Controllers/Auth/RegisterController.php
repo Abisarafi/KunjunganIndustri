@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -68,6 +69,17 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'role' => 'client',
         ]);
+    }
+
+    protected function registered(Request $request, $user)
+    {
+        // Check the user's role and redirect accordingly
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.calendar.index');
+        } elseif ($user->role === 'client') {
+            return redirect()->route('calendar.index');
+        }
     }
 }

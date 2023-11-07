@@ -92,7 +92,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h3 class="text-center mt-5">FullCalendar js Laravel series with Career Development Lab</h3>
+                <h3 class="text-center mt-5">Aplikasi Kunjungan Industri SIMS Lifemedia</h3>
                 <div class="col-md-11 offset-1 mt-5 mb-5">
                     <div id="calendar"></div>
                 </div>
@@ -141,7 +141,7 @@
                 <div class="modal-body">
                     <p><strong>Sekolah :</strong> <span id="booking-title"></span></p>
                     <p><strong>Jurusan :</strong> <span id="booking-jurusan"></span></p>
-                    <p><strong>Jumlah:</strong> <span id="booking-participant-count"></span></p>
+                    <p><strong>Jumlah Kelas :</strong> <span id="booking-participant-count"></span></p>
                     <p><strong>Tanggal :</strong> <span id="booking-start"></span></p>
                 </div>
                 <div class="modal-footer">

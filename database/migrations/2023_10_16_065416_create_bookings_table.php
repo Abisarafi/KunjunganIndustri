@@ -21,8 +21,8 @@ class CreateBookingsTable extends Migration
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->enum('status', ['processed', 'accepted', 'rejected'])->default('processed');
-            // $table->unsignedBigInteger('user_id');
-            // $table->foreign('user_id')->references('id')->on('users');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

@@ -26,7 +26,7 @@ Route::get('/', function () {
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
+Route::post('/login', [LoginController::class, 'authenticated']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
@@ -37,25 +37,25 @@ Auth::routes();
 Route::get('/home', [CalendarController::class, 'index'])->name('home');
 
 
-
 Route::get('/calendar', function () {
     return view('calendar');
 });
 
 
 // client
-Route::group(['middleware' => 'client'], function () {
+Route::group(['middleware' => ['auth', 'client']], function () {
     Route::get('calendar/index', [CalendarController::class, 'index'])->name('calendar.index');
     Route::post('calendar', [CalendarController::class, 'store'])->name('calendar.store');
-    Route::post('postPengajuan', [CalendarController::class, 'storePengajuan'])->name('calendar.storePengajuan');
-    Route::patch('calendar/update/{id}', [CalendarController::class, 'update'])->name('calendar.update');
+    // Route::post('postPengajuan', [CalendarController::class, 'storePengajuan'])->name('calendar.storePengajuan');
     Route::delete('calendar/destroy/{id}', [CalendarController::class, 'destroy'])->name('calendar.destroy');
     Route::delete('pengajuan/destroy/{id}', [CalendarController::class, 'destroyPengajuan'])->name('calendar.destroyPengajuan');
-    Route::get('calendar/check-accepted-bookings', [CalendarController::class, 'checkAcceptedBookings'])->name('calendar.check-accepted-bookings');
+    // Route::get('calendar/check-accepted-bookings', [CalendarController::class, 'checkAcceptedBookings'])->name('calendar.check-accepted-bookings');
+    // Route::get('calendar/check-weekend-date', [CalendarController::class, 'checkWeekendDate'])->name('calendar.check-weekend-date');
+    Route::get('calendar/check', [CalendarController::class, 'checkBooking'])->name('calendar.check');
 });
 
 //admin
-Route::group(['middleware' => 'admin'], function () {
+Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::get('admin/calendar/index', [AdminController::class, 'index'])->name('admin.calendar.index');
     Route::get('calendar/show/{id}', [AdminController::class, 'changeStatus'])->name('calendar.show');
     Route::post('admin/calendar/status', [AdminController::class, 'updateBookingStatus'])->name('admin.calendar.status');

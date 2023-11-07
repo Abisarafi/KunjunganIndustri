@@ -27,15 +27,11 @@ class User extends Authenticatable
         'votes',
     ];
 
-    public function pengajuans()
-    {
-        return $this->hasMany(Pengajuan::class);
-    }
 
-    // public function bookings()
-    // {
-    //     return $this->hasMany(Booking::class);
-    // }
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
