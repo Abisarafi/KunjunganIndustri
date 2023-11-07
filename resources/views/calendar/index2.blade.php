@@ -109,7 +109,6 @@
             </select>
             <select class="form-control" id="participant_count" name="participant_count" required>
                 <option value="" disabled selected>Jumlah Kelas (1 kelas max 30 orang)</option>
-                <option value="" disabled selected>Jumlah Kelas (1 kelas max 30 orang)</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
             </select>
@@ -182,25 +181,33 @@
                     success: function(response) {
                         bookingAllowed = !response.hasAcceptedBookings;
                         isWeekend = !response.isWeekend;
+                        isTomorrow = response.isTomorrow;
                     },
                     error: function(error) {
                         console.error(error);
                     },
                     complete: function() {
-                        if (isWeekend) {
-                            if (bookingAllowed) {
-                            // Show the booking modal
-                            $('#bookingModal').modal('toggle');
+                        if (isTomorrow) {
+                            if (isWeekend) {
+                                if (bookingAllowed) {
+                                // Show the booking modal
+                                $('#bookingModal').modal('toggle');
+                                } else {
+                                    // Show a popup message indicating that booking is not allowed
+                                    alert('Booking is not allowed in a week with accepted bookings.');
+                                    location.reload();
+                                }
                             } else {
-                                // Show a popup message indicating that booking is not allowed
-                                alert('Booking is not allowed in a week with accepted bookings.');
-                                location.reload();
-                            }
-                    } else {
-                        // Show a popup message indicating that booking is not allowed
-                        alert('Booking is not allowed in a weekends.');
-                        location.reload();
-                    }
+                            // Show a popup message indicating that booking is not allowed
+                            alert('Booking is not allowed in a weekends.');
+                            location.reload();
+                        }
+                        } else{
+                            // Show a popup message indicating that booking is not allowed
+                            alert('Booking is not allowed before today.');
+                            location.reload();
+                        }
+                        
                 }
             });
                 
@@ -255,11 +262,11 @@
                         },
                     });
                 } else {
-                    alert('The selected class exceeds the maximum participant count.');
-                    // Delay the location.reload by 5 seconds (5000 milliseconds)
+                    alert('jurusan RPL, MM, dan Broadcasting hanya boleh 1 kelas.');
+                    // Delay the location.reload by 5 seconds (1000 milliseconds)
                     setTimeout(function() {
                         location.reload();
-                    }, 2000);
+                    }, 1000);
                 }
             });
               

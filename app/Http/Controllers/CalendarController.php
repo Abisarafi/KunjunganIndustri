@@ -143,6 +143,7 @@ class CalendarController extends Controller
         $end = Carbon::parse($request->input('end'));
         $selectedStartDate = $request->input('start_date');
         $selectedWeekday = date('N', strtotime($selectedStartDate));
+        // true or false isWeekend
         $isWeekend = in_array($selectedWeekday, [6, 7]);
 
         $hasAcceptedBookings = Booking::where('status', 'accepted')
@@ -150,9 +151,12 @@ class CalendarController extends Controller
             ->where('end_date', '<=', $end)
             ->exists();
 
+        $isTomorrow = Carbon::parse($selectedStartDate)->isAfter(now()); // Check if selected date is after today
+
         return response()->json([
             'hasAcceptedBookings' => $hasAcceptedBookings,
             'isWeekend' => $isWeekend,
+            'isTomorrow' => $isTomorrow,
         ]);
     }
 }

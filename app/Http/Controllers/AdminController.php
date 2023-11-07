@@ -65,11 +65,27 @@ class AdminController extends Controller
         return view('admin.requests.show', compact('request'));
     }
 
+    public function rejectOtherBookingsInSameWeek($booking)
+    {
+        $startOfWeek = $booking->start_date->startOfWeek();
+        $endOfWeek = $booking->start_date->endOfWeek();
+
+        $otherBookingsInWeek = Booking::where('id', '<>', $booking->id)
+            ->where('start_date', '>=', $startOfWeek)
+            ->where('end_date', '<=', $endOfWeek)
+            ->where('status', 'accepted')
+            ->get();
+
+        foreach ($otherBookingsInWeek as $otherBooking) {
+            $otherBooking->status = 'rejected';
+            $otherBooking->save();
+        }
+    }
+
     public function accept(Request $request)
     {
         $bookingId = $request->input('booking_id');
-        $status = 'accepted'; // You can set the status directly
-        // $color = '#48EB12';
+        $status = 'accepted';
 
         $booking = Booking::find($bookingId);
 
@@ -78,16 +94,14 @@ class AdminController extends Controller
         }
 
         $booking->status = $status;
-        // $booking->color = $color;
         $booking->save();
 
-        return response()->json(
-            [
-                'status' => $status,
-                // 'color' => $color,
-                ]
-        );
+        // Call the function to reject other bookings in the same week
+        $this->rejectOtherBookingsInSameWeek($booking);
+
+        return response()->json(['status' => $status]);
     }
+    
 
     public function reject(Request $request)
     {
