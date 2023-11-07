@@ -45,7 +45,6 @@ class CalendarController extends Controller
 
             $events[] = [
                 'id' => $booking->id,
-                'id' => $booking->id,
                 'title' => $booking->title,
                 'jurusan' => $booking->jurusan,
                 'status' => $booking->status,
@@ -65,11 +64,8 @@ class CalendarController extends Controller
             'title' => 'required|string',
             'jurusan' => 'required|in:TKJ,SIJA,TJA,MM,RPL,Broadcasting',
             'participant_count' => 'required|in:1,2',
-            'start_date' => ['required', 'date' ],
+            'start_date' => 'required|date',
             'end_date' => ['required', 'date', 'after:start_date'],
-            'participant_count' => 'required|in:1,2|participant_count',
-            'start_date' => 'required|date|participant_count',
-            'end_date' => ['required', 'date', 'after:start_date', new WeekdayBooking],
         ]);
 
         $user = auth()->user();
@@ -87,15 +83,7 @@ class CalendarController extends Controller
         ]);
 
         
-        $color = null;
-
-        $color = null;
-        if ($booking->status == 'rejected') {
-            $color = '#FF3B28';
-        }
-        if ($booking->title == 'accepted') {
-            $color = '#48EB12';
-        }
+        
 
         return response()->json([
             'id' => $booking->id,
@@ -104,7 +92,6 @@ class CalendarController extends Controller
             'title' => $booking->title,
             'participant_count' => $booking->participant_count,
             'jurusan' => $booking->jurusan,
-            // 'color' => $color ? $color: '',
 
         ]);
         
@@ -112,7 +99,6 @@ class CalendarController extends Controller
 
 
     
-    }
 
 
     

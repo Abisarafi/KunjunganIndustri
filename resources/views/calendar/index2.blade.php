@@ -127,7 +127,6 @@
         <div class="row">
             <div class="col-12">
                 <h3 class="text-center mt-5">Aplikasi Kunjungan Industri SIMS Lifemedia</h3>
-                <h3 class="text-center mt-5">Aplikasi Kunjungan Industri SIMS Lifemedia</h3>
                 <div class="col-md-11 offset-1 mt-5 mb-5">
                     <div id="calendar"></div>
                 </div>
@@ -208,7 +207,7 @@
                 var selectedWeekStart = moment(start).startOf('week');
                 var selectedWeekEnd = moment(end).endOf('week');
                 var bookingAllowed = false;
-                var selectedStartDate = $('#start_date').val();
+                var selectedStartDate = moment(start).format('YYYY-MM-DD'); // Use selected date in the format you need
                 var selectedWeekday = moment(selectedStartDate).isoWeekday(); // Get the ISO weekday (1 = Monday, 7 = Sunday)
 
 

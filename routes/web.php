@@ -46,9 +46,9 @@ Route::group(['middleware' => ['auth', 'client']], function () {
     Route::get('calendar/index', [CalendarController::class, 'index'])->name('calendar.index');
     Route::post('calendar', [CalendarController::class, 'store'])->name('calendar.store');
     // Route::post('postPengajuan', [CalendarController::class, 'storePengajuan'])->name('calendar.storePengajuan');
-    Route::post('postPengajuan', [CalendarController::class, 'storePengajuan'])->name('calendar.storePengajuan');
+    // Route::post('postPengajuan', [CalendarController::class, 'storePengajuan'])->name('calendar.storePengajuan');
     Route::delete('calendar/destroy/{id}', [CalendarController::class, 'destroy'])->name('calendar.destroy');
-    Route::delete('pengajuan/destroy/{id}', [CalendarController::class, 'destroyPengajuan'])->name('calendar.destroyPengajuan');
+    // Route::delete('pengajuan/destroy/{id}', [CalendarController::class, 'destroyPengajuan'])->name('calendar.destroyPengajuan');
     // Route::get('calendar/check-accepted-bookings', [CalendarController::class, 'checkAcceptedBookings'])->name('calendar.check-accepted-bookings');
     // Route::get('calendar/check-weekend-date', [CalendarController::class, 'checkWeekendDate'])->name('calendar.check-weekend-date');
     Route::get('calendar/check', [CalendarController::class, 'checkBooking'])->name('calendar.check');
