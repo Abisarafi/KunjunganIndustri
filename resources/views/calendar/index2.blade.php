@@ -160,13 +160,15 @@
                 selectable: true,
                 selectHelper: true,
                 
+                // saat click tanggal kalender
                 select: function(start, end, allDays) {
+
                 var selectedWeekStart = moment(start).startOf('week');
                 var selectedWeekEnd = moment(end).endOf('week');
                 var bookingAllowed = false;
                 var selectedStartDate = moment(start).format('YYYY-MM-DD'); // Use selected date in the format you need
                 var selectedWeekday = moment(selectedStartDate).isoWeekday(); // Get the ISO weekday (1 = Monday, 7 = Sunday)
-
+                
 
                 $.ajax({
                     url: "{{ route('calendar.check') }}",
@@ -192,10 +194,12 @@
                             } else {
                                 // Show a popup message indicating that booking is not allowed
                                 alert('Booking is not allowed in a week with accepted bookings.');
+                                location.reload();
                             }
                     } else {
                         // Show a popup message indicating that booking is not allowed
                         alert('Booking is not allowed in a weekends.');
+                        location.reload();
                     }
                 }
             });
@@ -252,6 +256,10 @@
                     });
                 } else {
                     alert('The selected class exceeds the maximum participant count.');
+                    // Delay the location.reload by 5 seconds (5000 milliseconds)
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
                 }
             });
               

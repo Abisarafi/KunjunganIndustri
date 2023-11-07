@@ -26,5 +26,10 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    
+        // Add your custom exception class to the $dontReport property
+        $this->dontReport = array_merge($this->dontReport, [
+            \App\Exceptions\PageExpiredException::class,
+        ]);
     }
 }
