@@ -8,9 +8,13 @@ use Illuminate\Support\Carbon;
 use App\Rules\NotPastDateRule;
 use App\Rules\NotToday;
 
+use App\Models\User;
+use App\Rules\WeekdayBooking;
 
 class CalendarController extends Controller
 {
+    
+    
     
     
     public function index()
@@ -31,8 +35,16 @@ class CalendarController extends Controller
             // if ($booking->title == 'accepted') {
             //     $color = '#48EB12';
             // }
+            $color = null;
+            if ($booking->status == 'rejected') {
+                $color = '#FF3B28';
+            }
+            if ($booking->title == 'accepted') {
+                $color = '#48EB12';
+            }
 
             $events[] = [
+                'id' => $booking->id,
                 'id' => $booking->id,
                 'title' => $booking->title,
                 'jurusan' => $booking->jurusan,
@@ -40,9 +52,9 @@ class CalendarController extends Controller
                 'participant_count' => $booking->participant_count,
                 'start' => $booking->start_date,
                 'end' => $booking->end_date,
-                // 'color' => $color,
             ];
         }
+
 
         return view('calendar.index2', ['events' => $events]);
     }
@@ -55,8 +67,14 @@ class CalendarController extends Controller
             'participant_count' => 'required|in:1,2',
             'start_date' => ['required', 'date' ],
             'end_date' => ['required', 'date', 'after:start_date'],
+            'participant_count' => 'required|in:1,2|participant_count',
+            'start_date' => 'required|date|participant_count',
+            'end_date' => ['required', 'date', 'after:start_date', new WeekdayBooking],
         ]);
 
+        $user = auth()->user();
+
+        // Get the currently authenticated user
         $user = auth()->user();
 
         $booking = Booking::create([
@@ -69,8 +87,15 @@ class CalendarController extends Controller
         ]);
 
         
+        $color = null;
 
-        
+        $color = null;
+        if ($booking->status == 'rejected') {
+            $color = '#FF3B28';
+        }
+        if ($booking->title == 'accepted') {
+            $color = '#48EB12';
+        }
 
         return response()->json([
             'id' => $booking->id,
@@ -83,6 +108,10 @@ class CalendarController extends Controller
 
         ]);
         
+    }
+
+
+    
     }
 
 

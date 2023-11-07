@@ -109,6 +109,7 @@
             </select>
             <select class="form-control" id="participant_count" name="participant_count" required>
                 <option value="" disabled selected>Jumlah Kelas (1 kelas max 30 orang)</option>
+                <option value="" disabled selected>Jumlah Kelas (1 kelas max 30 orang)</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
             </select>
@@ -126,6 +127,7 @@
         <div class="row">
             <div class="col-12">
                 <h3 class="text-center mt-5">Aplikasi Kunjungan Industri SIMS Lifemedia</h3>
+                <h3 class="text-center mt-5">Aplikasi Kunjungan Industri SIMS Lifemedia</h3>
                 <div class="col-md-11 offset-1 mt-5 mb-5">
                     <div id="calendar"></div>
                 </div>
@@ -133,6 +135,7 @@
         </div>
     </div>
 
+    
     
 
 
@@ -299,6 +302,28 @@
                     });
                 }
             },
+               
+                eventClick: function(event){
+                    var id = event.id;
+
+                    if(confirm('Are you sure want to remove it')){
+                        $.ajax({
+                            url:"{{ route('calendar.destroy', '') }}" +'/'+ id,
+                            type:"DELETE",
+                            dataType:'json',
+                            success:function(response)
+                            {
+                                $('#calendar').fullCalendar('removeEvents', response);
+                                // swal("Good job!", "Event Deleted!", "success");
+                            },
+                            error:function(error)
+                            {
+                                console.log(error)
+                            },
+                        });
+                    }
+
+                },
                 selectAllow: function(event)
                 {
                     return moment(event.start).utcOffset(false).isSame(moment(event.end).subtract(1, 'second').utcOffset(false), 'day');
