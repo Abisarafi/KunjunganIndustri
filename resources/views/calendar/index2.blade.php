@@ -159,50 +159,7 @@
                 events: booking,
                 selectable: true,
                 selectHelper: true,
-                // select: function(start, end, allDays) {
-                //     $('#bookingModal').modal('toggle');
-
-                //     $('#saveBtn').click(function() {
-                //         var title = $('#title').val();
-                //         var jurusan = $('#jurusan').val();
-                //         var participant_count = $('#participant_count').val();
-                //         var start_date = moment(start).format('YYYY-MM-DD');
-                //         var end_date = moment(end).format('YYYY-MM-DD');
-
-                //         $.ajax({
-                //             url:"{{ route('calendar.store') }}",
-                //             type:"POST",
-                //             dataType:'json',
-                //             data: { 
-                //                 title,
-                //                 start_date,
-                //                 end_date,
-                //                 jurusan,
-                //                 participant_count,
-                //             },
-                //             success:function(response)
-                //             {
-                //                 $('#bookingModal').modal('hide')
-                //                 $('#calendar').fullCalendar('renderEvent', {
-                //                     'title': response.title,
-                //                     'jurusan': response.jurusan, // Updated variable name
-                //                     'participant_count': response.participant_count, // Updated variable name
-                //                     'start' : response.start,
-                //                     'end'  : response.end,
-                //                     'color' : response.color
-                //                 });
-
-                //             },
-                //             error:function(error)
-                //             {
-                //                 if(error.responseJSON.errors) {
-                //                     $('#titleError').html(error.responseJSON.errors.title);
-                                   
-                //                 }
-                //             },
-                //         });
-                //     });
-                // },
+                
                 select: function(start, end, allDays) {
                 var selectedWeekStart = moment(start).startOf('week');
                 var selectedWeekEnd = moment(end).endOf('week');
@@ -244,18 +201,31 @@
             });
                 
                 // Booking submission logic
-                $('#saveBtn').click(function() {
-                    var title = $('#title').val();
-                    var jurusan = $('#jurusan').val();
-                    var participant_count = $('#participant_count').val();
-                    var start_date = moment(start).format('YYYY-MM-DD');
-                    var end_date = moment(end).format('YYYY-MM-DD');
 
+                $('#saveBtn').click(function() {
+                var title = $('#title').val();
+                var jurusan = $('#jurusan').val();
+                var participant_count = $('#participant_count').val();
+                var start_date = moment(start).format('YYYY-MM-DD');
+                var end_date = moment(end).format('YYYY-MM-DD');
+                var kelas = jurusan; // Assuming that 'jurusan' contains the class name
+
+                // Define the maximum participant counts for each class
+                var maxCounts = {
+                    'TKJ': 2,
+                    'SIJA': 2,
+                    'TJA': 2,
+                    'MM': 1,
+                    'RPL': 1,
+                    'Broadcasting': 1,
+                };
+
+                if (participant_count <= maxCounts[kelas]) {
                     $.ajax({
                         url: "{{ route('calendar.store') }}",
                         type: "POST",
                         dataType: 'json',
-                        data: { 
+                        data: {
                             title,
                             start_date,
                             end_date,
@@ -273,7 +243,6 @@
                                 // 'color': response.color
                             });
                             location.reload();
-                            
                         },
                         error: function(error) {
                             if (error.responseJSON.errors) {
@@ -281,8 +250,12 @@
                             }
                         },
                     });
-                });
-            },
+                } else {
+                    alert('The selected class exceeds the maximum participant count.');
+                }
+            });
+              
+    },
                
             eventClick: function(event) {
                 var id = event.id; // Get the event ID from the clicked event
