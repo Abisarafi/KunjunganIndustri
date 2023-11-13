@@ -19,23 +19,22 @@ class AdminController extends Controller
         $events = array();
         $bookings = Booking::all();
         foreach($bookings as $booking) {
-            // $color = null;
-            // if ($booking->status == 'rejected') {
-            //     $color = '#FF3B28';
-            // }
-            // if ($booking->title == 'accepted') {
-            //     $color = '#48EB12';
-            // }
 
             $events[] = [
                 'id'   => $booking->id,
                 'title' => $booking->title,
                 'jurusan' => $booking->jurusan,
+                'status' => $booking->status,
                 'participant_count' => $booking->participant_count,
                 'start' => $booking->start_date,
                 'end' => $booking->end_date,
                 // 'color' => $color
             ];
+
+            // // Check if this booking was accepted and update other bookings in the same week
+            // if ($booking->status === 'accepted') {
+            //     $this->rejectOtherBookingsInSameWeek($booking);
+            // }
         }
         return view('admin.index2', ['events' => $events]);
     }
@@ -65,20 +64,21 @@ class AdminController extends Controller
         return view('admin.requests.show', compact('request'));
     }
 
-    public function rejectOtherBookingsInSameWeek($booking)
+    public function rejectOtherBookingsInSameWeek(Booking $acceptedBooking)
     {
-        $startOfWeek = $booking->start_date->startOfWeek();
-        $endOfWeek = $booking->start_date->endOfWeek();
-
-        $otherBookingsInWeek = Booking::where('id', '<>', $booking->id)
-            ->where('start_date', '>=', $startOfWeek)
-            ->where('end_date', '<=', $endOfWeek)
-            ->where('status', 'accepted')
+        // Find other bookings in the same week with status 'processed' or 'accepted'
+        $otherBookings = Booking::whereIn('status', ['processed', 'accepted'])
+            ->where(function ($query) use ($acceptedBooking) {
+                $query->whereBetween('start_date', [$acceptedBooking->start_date, $acceptedBooking->end_date])
+                    ->orWhereBetween('end_date', [$acceptedBooking->start_date, $acceptedBooking->end_date]);
+            })
+            ->where('id', '!=', $acceptedBooking->id)
             ->get();
 
-        foreach ($otherBookingsInWeek as $otherBooking) {
-            $otherBooking->status = 'rejected';
-            $otherBooking->save();
+        // Update the status of other bookings to 'rejected'
+        foreach ($otherBookings as $booking) {
+            $booking->status = 'rejected';
+            $booking->save();
         }
     }
 
@@ -93,11 +93,12 @@ class AdminController extends Controller
             return response()->json(['error' => 'Booking not found'], 404);
         }
 
+        // Update the status of other bookings in the same week to 'rejected'
+        $this->rejectOtherBookingsInSameWeek($booking);
+
+        // Update the status of the accepted booking to 'accepted'
         $booking->status = $status;
         $booking->save();
-
-        // Call the function to reject other bookings in the same week
-        $this->rejectOtherBookingsInSameWeek($booking);
 
         return response()->json(['status' => $status]);
     }

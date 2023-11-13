@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Full Calendar js</title>
+    <title>Kunjungan Industri SIMS Lifemedia</title>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
@@ -37,7 +37,7 @@
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
-                {{ config('app.name', 'Laravel') }}
+                {{ config('app.name', 'Kunjungan Industri SIMS Lifemedia') }}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                 <span class="navbar-toggler-icon"></span>
@@ -120,6 +120,30 @@
       </div>
     </div>
   </div>
+
+    <!-- Booking Details Modal -->
+    <div class="modal fade" id="bookingDetailsModal" tabindex="-1" role="dialog" aria-labelledby="bookingDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bookingDetailsModalLabel">Booking Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Sekolah :</strong> <span id="booking-title"></span></p>
+                    <p><strong>Jurusan :</strong> <span id="booking-jurusan"></span></p>
+                    <p><strong>Jumlah Kelas :</strong> <span id="booking-participant-count"></span></p>
+                    <p><strong>Tanggal :</strong> <span id="booking-start"></span></p>
+                    <p><strong>Status :</strong> <span id="booking-status"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="delete-booking">Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Your content should be placed here, outside the navbar container -->
     <div class="container">
@@ -217,6 +241,7 @@
                 var title = $('#title').val();
                 var jurusan = $('#jurusan').val();
                 var participant_count = $('#participant_count').val();
+                var status = "processed";
                 var start_date = moment(start).format('YYYY-MM-DD');
                 var end_date = moment(end).format('YYYY-MM-DD');
                 var kelas = jurusan; // Assuming that 'jurusan' contains the class name
@@ -242,6 +267,7 @@
                             end_date,
                             jurusan,
                             participant_count,
+                            status,
                         },
                         success: function(response) {
                             $('#bookingModal').modal('hide');
@@ -249,6 +275,7 @@
                                 'title': response.title,
                                 'jurusan': response.jurusan,
                                 'participant_count': response.participant_count,
+                                'status': response.status,
                                 'start': response.start,
                                 'end': response.end,
                                 // 'color': response.color
@@ -272,10 +299,84 @@
               
     },
                
-            eventClick: function(event) {
-                var id = event.id; // Get the event ID from the clicked event
+            // eventClick: function(event) {
+            //     var id = event.id; // Get the event ID from the clicked event
 
-                if (confirm('Are you sure want to remove it')) {
+            //     if (confirm('Are you sure want to remove it')) {
+            //         $.ajax({
+            //             url: "{{ route('calendar.destroy', '') }}" + '/' + id, // Use the correct event ID
+            //             type: "DELETE",
+            //             dataType: 'json',
+            //             success: function (response) {
+            //                 $('#calendar').fullCalendar('removeEvents', response);
+            //             },
+            //             error: function (error) {
+            //                 console.log(error);
+            //             },
+            //         });
+            //     }
+            // },
+    
+            // event click
+            eventClick: function(event) {
+                var id = event.id;
+                bookingId = event.id; // Store the selected booking ID when an event is clicked
+                var title = event.title;
+                var jurusan = event.jurusan;
+                var status = event.status;
+                var participant_count = event.participant_count;
+                var start_date = event.start.format('YYYY-MM-DD');
+                var end_date = event.end.format('YYYY-MM-DD');
+                bookingId = event.id; // Store the selected booking ID when an event is clicked
+                // // Show the modal when an event is clicked
+                // var status = $('#status').val();
+
+                // Populate your modal with the event details
+                $('#bookingDetailsModal').modal('show');
+                $('#booking-title').text(title);
+                $('#booking-jurusan').text(jurusan);
+                $('#booking-participant-count').text(participant_count);
+                $('#booking-start').text(start_date);
+                $('#booking-status').text(status);
+
+                // if (confirm('Are you sure want to remove it')) {
+                //     $.ajax({
+                //         url: "{{ route('calendar.destroy', '') }}" + '/' + id, // Use the correct event ID
+                //         type: "DELETE",
+                //         dataType: 'json',
+                //         success: function (response) {
+                //             $('#calendar').fullCalendar('removeEvents', response);
+                //         },
+                //         error: function (error) {
+                //             console.log(error);
+                //         },
+                //     });
+                // }
+
+                // Handle the "Hapus" button click
+                $('#delete-booking').click(function() {
+                    var idEvent = event.id;
+                    deleteBooking(idEvent);
+                    $('#bookingDetailsModal').modal('hide'); // Hide the modal here
+                });
+
+                // Handle the "x" button click
+                $('#close').click(function() {
+                    $('#bookingDetailsModal').modal('hide'); // Hide the modal here
+                });
+
+            },
+               
+                
+                selectAllow: function(event)
+                {
+                    return moment(event.start).utcOffset(false).isSame(moment(event.end).subtract(1, 'second').utcOffset(false), 'day');
+                },
+            });
+
+            // Function to delete booking
+            function deleteBooking(idEvent) {
+                id = idEvent;
                     $.ajax({
                         url: "{{ route('calendar.destroy', '') }}" + '/' + id, // Use the correct event ID
                         type: "DELETE",
@@ -287,38 +388,7 @@
                             console.log(error);
                         },
                     });
-                }
-            },
-               
-                eventClick: function(event){
-                    var id = event.id;
-
-                    if(confirm('Are you sure want to remove it')){
-                        $.ajax({
-                            url:"{{ route('calendar.destroy', '') }}" +'/'+ id,
-                            type:"DELETE",
-                            dataType:'json',
-                            success:function(response)
-                            {
-                                $('#calendar').fullCalendar('removeEvents', response);
-                                // swal("Good job!", "Event Deleted!", "success");
-                            },
-                            error:function(error)
-                            {
-                                console.log(error)
-                            },
-                        });
-                    }
-
-                },
-                selectAllow: function(event)
-                {
-                    return moment(event.start).utcOffset(false).isSame(moment(event.end).subtract(1, 'second').utcOffset(false), 'day');
-                },
-
-
-
-            });
+            }
 
 
             $("#bookingModal").on("hidden.bs.modal", function () {

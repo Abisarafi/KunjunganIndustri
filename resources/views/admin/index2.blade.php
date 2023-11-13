@@ -99,34 +99,6 @@
             </div>
         </div>
     </div>
-    <!-- Booking Details Modal -->
-    {{-- <div class="modal fade" id="bookingDetailsModal" tabindex="-1" role="dialog" aria-labelledby="bookingDetailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="bookingDetailsModalLabel">Booking Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p><strong>Title:</strong> <span id="booking-title"></span></p>
-                    <p><strong>Class:</strong> <span id="booking-class"></span></p>
-                    <p><strong>Participant Count:</strong> <span id="booking-participant-count"></span></p>
-                    <p><strong>Start Date:</strong> <span id="booking-start"></span></p>
-                    <p><strong>End Date:</strong> <span id="booking-end"></span></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success" id="accept-booking" value="accepted">Accept</button>
-                    <button type="button" class="btn btn-danger" id="reject-booking" value="rejected">Reject</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    {{-- <button type="button" class="btn btn-success accept-booking" data-status="accepted">Accept</button>
-                    <button type="button" class="btn btn-danger reject-booking" data-status="rejected">Reject</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> 
-                </div>
-            </div>
-        </div>
-    </div> --}}
 
     <!-- Booking Details Modal -->
     <div class="modal fade" id="bookingDetailsModal" tabindex="-1" role="dialog" aria-labelledby="bookingDetailsModalLabel" aria-hidden="true">
@@ -143,6 +115,7 @@
                     <p><strong>Jurusan :</strong> <span id="booking-jurusan"></span></p>
                     <p><strong>Jumlah Kelas :</strong> <span id="booking-participant-count"></span></p>
                     <p><strong>Tanggal :</strong> <span id="booking-start"></span></p>
+                    <p><strong>Status :</strong> <span id="booking-status"></span></p>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success" id="accept-booking">Accept</button>
@@ -204,17 +177,19 @@
                 bookingId = event.id; // Store the selected booking ID when an event is clicked
                 var title = event.title;
                 var jurusan = event.jurusan;
+                var status = event.status;
                 var participant_count = event.participant_count;
                 var start_date = event.start.format('YYYY-MM-DD');
                 var end_date = event.end.format('YYYY-MM-DD');
                 bookingId = event.id; // Store the selected booking ID when an event is clicked
-                // Show the modal when an event is clicked
-                var status = $('#status').val();
+                // // Show the modal when an event is clicked
+                // var status = $('#status').val();
 
                 // Populate your modal with the event details
                 $('#bookingDetailsModal').modal('show');
                 $('#booking-title').text(title);
                 $('#booking-jurusan').text(jurusan);
+                $('#booking-status').text(status);
                 $('#booking-participant-count').text(participant_count);
                 $('#booking-start').text(start_date);
 
@@ -225,6 +200,7 @@
                     var status = 'accepted'; // Set status as 'accepted'
                     updateBookingStatus(bookingId, status);
                     $('#bookingDetailsModal').modal('hide'); // Hide the modal here
+                    location.reload();
                 });
 
                 // Handle the "Reject" button click
@@ -232,71 +208,13 @@
                     var status = 'rejected'; // Set status as 'rejected'
                     updateBookingStatus(bookingId, status);
                     $('#bookingDetailsModal').modal('hide'); // Hide the modal here
+                    location.reload();
                 });
 
                 // Handle the "x" button click
                 $('#close').click(function() {
                     $('#bookingDetailsModal').modal('hide'); // Hide the modal here
                 });
-
-                // // Handle the "Accept" button click
-                // $('.accept-booking').click(function () {
-                //     var bookingId = $(this).data('booking-id');
-                //     var status = $(this).data('status');
-
-                //     $.ajax({
-                //         url: "{{ route('admin.calendar.update-booking-status') }}",
-                //         type: "POST",
-                //         dataType: 'json',
-                //         data: {
-                //             booking_id: bookingId,
-                //             status: status
-                //         },
-                //         success: function(response) {
-                //             $('#bookingDetailsModal').modal('hide');
-                //             // You can update the event status here if needed
-                //         },
-                //         error: function(error) {
-                //             // Handle errors
-                //             console.log(error);
-                //         }
-                //     });
-                // });
-
-                // // Handle the "Reject" button click
-                // $('.reject-booking').click(function () {
-                //     var bookingId = $(this).data('booking-id');
-                //     var status = $(this).data('status');
-
-                //     $.ajax({
-                //         url: "{{ route('admin.calendar.update-booking-status') }}",
-                //         type: "POST",
-                //         dataType: 'json',
-                //         data: {
-                //             booking_id: bookingId,
-                //             status: status
-                //         },
-                //         success: function(response) {
-                //             $('#bookingDetailsModal').modal('hide');
-                //             // You can update the event status here if needed
-                //         },
-                //         error: function(error) {
-                //             // Handle errors
-                //             console.log(error);
-                //         }
-                //     });
-                // });
-
-                // // Handle the "Accept" button click
-                // $('#accept-booking').click(function () {
-                //     updateBookingStatus(bookingId, 'accepted'); // Call your function with 'accepted' status
-                // });
-
-                // // Handle the "Reject" button click
-                // $('#reject-booking').click(function () {
-                //     updateBookingStatus(bookingId, 'rejected'); // Call your function with 'rejected' status
-                // });
-                // Close the modal when either button is clicked
 
             },
 

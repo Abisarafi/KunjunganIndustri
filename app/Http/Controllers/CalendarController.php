@@ -79,6 +79,7 @@ class CalendarController extends Controller
             'participant_count' => $request->participant_count,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
+            'status' => $request->status,
             'user_id' => $user->id
         ]);
 
@@ -92,7 +93,7 @@ class CalendarController extends Controller
             'title' => $booking->title,
             'participant_count' => $booking->participant_count,
             'jurusan' => $booking->jurusan,
-
+            'status' => $booking->status,
         ]);
         
     }
