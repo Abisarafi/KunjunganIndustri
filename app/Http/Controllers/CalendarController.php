@@ -7,7 +7,6 @@ use App\Models\Booking;
 use Illuminate\Support\Carbon;
 use App\Rules\NotPastDateRule;
 use App\Rules\NotToday;
-
 use App\Models\User;
 use App\Rules\WeekdayBooking;
 
@@ -28,18 +27,11 @@ class CalendarController extends Controller
         $events = [];
 
         foreach ($bookings as $booking) {
-            // $color = null;
-            // if ($booking->status == 'rejected') {
-            //     $color = '#FF3B28';
-            // }
-            // if ($booking->title == 'accepted') {
-            //     $color = '#48EB12';
-            // }
             $color = null;
             if ($booking->status == 'rejected') {
                 $color = '#FF3B28';
             }
-            if ($booking->title == 'accepted') {
+            if ($booking->status == 'accepted') {
                 $color = '#48EB12';
             }
 
@@ -51,6 +43,7 @@ class CalendarController extends Controller
                 'participant_count' => $booking->participant_count,
                 'start' => $booking->start_date,
                 'end' => $booking->end_date,
+                'color' => $color,
             ];
         }
 
@@ -115,28 +108,7 @@ class CalendarController extends Controller
         return $id;
     }
 
-    // public function checkAcceptedBookings(Request $request)
-    // {
-    //     $start = Carbon::parse($request->input('start'));
-    //     $end = Carbon::parse($request->input('end'));
-
-    //     $hasAcceptedBookings = Booking::where('status', 'accepted')
-    //         ->where('start_date', '>=', $start)
-    //         ->where('end_date', '<=', $end)
-    //         ->exists();
-
-    //     return response()->json(['hasAcceptedBookings' => $hasAcceptedBookings]);
-    // }
-
-    // public function checkWeekendDate(Request $request)
-    // {
-    //     $selectedStartDate = $request->input('start_date');
-    //     $selectedWeekday = date('N', strtotime($selectedStartDate));
-
-    //     $isWeekend = in_array($selectedWeekday, [6, 7]); // Weekend dates (Saturday or Sunday)
-
-    //     return response()->json(['isWeekend' => $isWeekend]);
-    // }
+   
 
     public function checkBooking(Request $request)
     {

@@ -23,6 +23,7 @@ class CreateBookingsTable extends Migration
             $table->enum('status', ['processed', 'accepted', 'rejected'])->default('processed');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->string('color')->nullable();
             $table->timestamps();
         });
     }

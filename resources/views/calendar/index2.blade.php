@@ -182,6 +182,12 @@
                 events: booking,
                 selectable: true,
                 selectHelper: true,
+                loading: function(bool) {
+                // If the calendar is loading (true), refetch events
+                if (bool) {
+                    $('#calendar').fullCalendar('refetchEvents');
+                }
+            },
                 
                 // saat click tanggal kalender
                 select: function(start, end, allDays) {
@@ -278,7 +284,7 @@
                                 'status': response.status,
                                 'start': response.start,
                                 'end': response.end,
-                                // 'color': response.color
+                                'color': response.color
                             });
                             location.reload();
                         },
@@ -299,23 +305,7 @@
               
     },
                
-            // eventClick: function(event) {
-            //     var id = event.id; // Get the event ID from the clicked event
-
-            //     if (confirm('Are you sure want to remove it')) {
-            //         $.ajax({
-            //             url: "{{ route('calendar.destroy', '') }}" + '/' + id, // Use the correct event ID
-            //             type: "DELETE",
-            //             dataType: 'json',
-            //             success: function (response) {
-            //                 $('#calendar').fullCalendar('removeEvents', response);
-            //             },
-            //             error: function (error) {
-            //                 console.log(error);
-            //             },
-            //         });
-            //     }
-            // },
+            
     
             // event click
             eventClick: function(event) {
@@ -339,19 +329,7 @@
                 $('#booking-start').text(start_date);
                 $('#booking-status').text(status);
 
-                // if (confirm('Are you sure want to remove it')) {
-                //     $.ajax({
-                //         url: "{{ route('calendar.destroy', '') }}" + '/' + id, // Use the correct event ID
-                //         type: "DELETE",
-                //         dataType: 'json',
-                //         success: function (response) {
-                //             $('#calendar').fullCalendar('removeEvents', response);
-                //         },
-                //         error: function (error) {
-                //             console.log(error);
-                //         },
-                //     });
-                // }
+               
 
                 // Handle the "Hapus" button click
                 $('#delete-booking').click(function() {

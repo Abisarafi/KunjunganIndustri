@@ -20,6 +20,14 @@ class AdminController extends Controller
         $bookings = Booking::all();
         foreach($bookings as $booking) {
 
+            $color = null;
+            if ($booking->status == 'rejected') {
+                $color = '#FF3B28';
+            }
+            if ($booking->status == 'accepted') {
+                $color = '#48EB12';
+            }
+            
             $events[] = [
                 'id'   => $booking->id,
                 'title' => $booking->title,
@@ -28,7 +36,7 @@ class AdminController extends Controller
                 'participant_count' => $booking->participant_count,
                 'start' => $booking->start_date,
                 'end' => $booking->end_date,
-                // 'color' => $color
+                'color' => $color,
             ];
 
             // // Check if this booking was accepted and update other bookings in the same week
@@ -86,6 +94,7 @@ class AdminController extends Controller
     {
         $bookingId = $request->input('booking_id');
         $status = 'accepted';
+        $color = '#48EB12';
 
         $booking = Booking::find($bookingId);
 
@@ -98,9 +107,10 @@ class AdminController extends Controller
 
         // Update the status of the accepted booking to 'accepted'
         $booking->status = $status;
+        $booking->color = $color;
         $booking->save();
 
-        return response()->json(['status' => $status]);
+        return response()->json(['status' => $status, 'color' => $color]);
     }
     
 
@@ -108,7 +118,7 @@ class AdminController extends Controller
     {
         $bookingId = $request->input('booking_id');
         $status = 'rejected'; // You can set the status directly
-        // $color = '#FF3B28';
+        $color = '#FF3B28';
 
         $booking = Booking::find($bookingId);
 
@@ -117,14 +127,9 @@ class AdminController extends Controller
         }
 
         $booking->status = $status;
-        // $booking->color = $color;
+        $booking->color = $color;
         $booking->save();
 
-        return response()->json(
-            [
-                'status' => $status,
-                // 'color' => $color,
-                ]
-        );
+        return response()->json(['status' => $status, 'color' => $color]);
     }
 }
