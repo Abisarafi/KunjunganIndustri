@@ -49,9 +49,9 @@ Route::group(['middleware' => ['auth', 'client']], function () {
 //admin
 Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::get('admin/calendar/index', [AdminController::class, 'index'])->name('admin.calendar.index');
-    Route::get('calendar/show/{id}', [AdminController::class, 'changeStatus'])->name('calendar.show');
-    Route::post('admin/calendar/status', [AdminController::class, 'updateBookingStatus'])->name('admin.calendar.status');
-    Route::post('/admin/calendar/update-booking-status', [AdminController::class, 'updateBookingStatus'])->name('admin.calendar.update-booking-status');
+    // Route::get('calendar/show/{id}', [AdminController::class, 'changeStatus'])->name('calendar.show');
+    // Route::post('admin/calendar/status', [AdminController::class, 'updateBookingStatus'])->name('admin.calendar.status');
+    // Route::post('/admin/calendar/update-booking-status', [AdminController::class, 'updateBookingStatus'])->name('admin.calendar.update-booking-status');
     Route::post('admin/calendar/status-accept', [AdminController::class, 'accept'])->name('admin.calendar.accept');
     Route::post('admin/calendar/status-reject', [AdminController::class, 'reject'])->name('admin.calendar.reject');
 });

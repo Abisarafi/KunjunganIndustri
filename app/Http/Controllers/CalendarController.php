@@ -124,12 +124,21 @@ class CalendarController extends Controller
             ->where('end_date', '<=', $end)
             ->exists();
 
-        $isTomorrow = Carbon::parse($selectedStartDate)->isAfter(now()); // Check if selected date is after today
+        $selectedDate = Carbon::parse($selectedStartDate);
+
+        // Check if selected date is tomorrow
+        $isTomorrow = $selectedDate->isAfter(now());
+
+        // Check if selected date is more than 7 days from today
+        $daysDifference = $selectedDate->diffInDays(now());
+        $isMoreThan7Days = $daysDifference > 7;
 
         return response()->json([
             'hasAcceptedBookings' => $hasAcceptedBookings,
             'isWeekend' => $isWeekend,
             'isTomorrow' => $isTomorrow,
+            'isMoreThan7Days' => $isMoreThan7Days,
         ]);
     }
+
 }

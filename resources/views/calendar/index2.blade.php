@@ -212,6 +212,7 @@
                         bookingAllowed = !response.hasAcceptedBookings;
                         isWeekend = !response.isWeekend;
                         isTomorrow = response.isTomorrow;
+                        isMoreThan7Days = response.isMoreThan7Days;
                     },
                     error: function(error) {
                         console.error(error);
@@ -219,19 +220,25 @@
                     complete: function() {
                         if (isTomorrow) {
                             if (isWeekend) {
-                                if (bookingAllowed) {
-                                // Show the booking modal
-                                $('#bookingModal').modal('toggle');
+                                if (isMoreThan7Days) {
+                                    if (bookingAllowed) {
+                                        // Show the booking modal
+                                        $('#bookingModal').modal('toggle');
+                                    } else {
+                                        // Show a popup message indicating that booking is not allowed
+                                        alert('Booking is not allowed in a week with accepted bookings.');
+                                        location.reload();
+                                    }
                                 } else {
                                     // Show a popup message indicating that booking is not allowed
-                                    alert('Booking is not allowed in a week with accepted bookings.');
+                                    alert('Tanggal yang dipilih minimal 7 hari setelah tanggal Anda melakukan pengajuan.');
                                     location.reload();
                                 }
                             } else {
-                            // Show a popup message indicating that booking is not allowed
-                            alert('Booking is not allowed in a weekends.');
-                            location.reload();
-                        }
+                                // Show a popup message indicating that booking is not allowed
+                                alert('Booking is not allowed in a weekends.');
+                                location.reload();
+                            }
                         } else{
                             // Show a popup message indicating that booking is not allowed
                             alert('Booking is not allowed before today.');
