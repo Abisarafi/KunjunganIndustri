@@ -109,8 +109,8 @@
             </select>
             <select class="form-control" id="participant_count" name="participant_count" required>
                 <option value="" disabled selected>Jumlah Kelas (1 kelas max 30 orang)</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
+                <option value="1">1 kelas</option>
+                <option value="2">2 kelas</option>
             </select>
         </div>
         <div class="modal-footer">

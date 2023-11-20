@@ -117,7 +117,7 @@ class CalendarController extends Controller
         $selectedStartDate = $request->input('start_date');
         $selectedWeekday = date('N', strtotime($selectedStartDate));
         // true or false isWeekend
-        $isWeekend = in_array($selectedWeekday, [6, 7]);
+        $isWeekend = in_array($selectedWeekday, [7]);
 
         $hasAcceptedBookings = Booking::where('status', 'accepted')
             ->where('start_date', '>=', $start)
