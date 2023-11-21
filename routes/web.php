@@ -33,15 +33,8 @@ Route::get('/', function () {
 // Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 // Route::post('/register', [RegisterController::class, 'register']);
 
+
 Auth::routes();
-
-
-
-Route::get('/calendar', function () {
-    return view('calendar');
-});
-
-
 // client
 Route::group(['middleware' => ['auth', 'client']], function () {
     Route::get('calendar/index', [CalendarController::class, 'index'])->name('calendar.index');
