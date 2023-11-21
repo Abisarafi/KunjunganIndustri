@@ -8,12 +8,7 @@ use App\Models\Booking;
 
 class AdminController extends Controller
 {
-    // Display a list of client requests
-    // public function index()
-    // {
-    //     $requests = Pengajuan::where('status', 'processed')->get(); // Retrieve processed requests
-    //     return view('admin.requests.index', compact('requests'));
-    // }
+
     public function index()
     {
         $events = array();
@@ -39,56 +34,11 @@ class AdminController extends Controller
                 'color' => $color,
             ];
 
-            // // Check if this booking was accepted and update other bookings in the same week
-            // if ($booking->status === 'accepted') {
-            //     $this->rejectOtherBookingsInSameWeek($booking);
-            // }
         }
         return view('admin.index2', ['events' => $events]);
+        // return view('admin.calendarPengajuan', ['events' => $events]);
     }
 
-
-    public function updateBookingStatus(Request $request)
-    {
-        $bookingId = $request->input('booking_id');
-        $status = $request->input('status');
-
-        $booking = Booking::find($bookingId);
-
-        if (!$booking) {
-            return response()->json(['error' => 'Booking not found'], 404);
-        }
-
-        $booking->status = $status;
-        $booking->save();
-
-        return response()->json(['status' => $status]);
-    }
-
-    // Show the details of a specific request
-    public function show($id)
-    {
-        $request = Pengajuan::find($id);
-        return view('admin.requests.show', compact('request'));
-    }
-
-    public function rejectOtherBookingsInSameWeek(Booking $acceptedBooking)
-    {
-        // Find other bookings in the same week with status 'processed' or 'accepted'
-        $otherBookings = Booking::whereIn('status', ['processed', 'accepted'])
-            ->where(function ($query) use ($acceptedBooking) {
-                $query->whereBetween('start_date', [$acceptedBooking->start_date, $acceptedBooking->end_date])
-                    ->orWhereBetween('end_date', [$acceptedBooking->start_date, $acceptedBooking->end_date]);
-            })
-            ->where('id', '!=', $acceptedBooking->id)
-            ->get();
-
-        // Update the status of other bookings to 'rejected'
-        foreach ($otherBookings as $booking) {
-            $booking->status = 'rejected';
-            $booking->save();
-        }
-    }
 
     public function accept(Request $request)
     {
@@ -101,9 +51,6 @@ class AdminController extends Controller
         if (!$booking) {
             return response()->json(['error' => 'Booking not found'], 404);
         }
-
-        // Update the status of other bookings in the same week to 'rejected'
-        $this->rejectOtherBookingsInSameWeek($booking);
 
         // Update the status of the accepted booking to 'accepted'
         $booking->status = $status;
