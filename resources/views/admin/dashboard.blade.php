@@ -25,6 +25,7 @@
                                     <th>Jurusan</th>
                                     <th>Jumlah Kelas</th>
                                     <th>Tanggal Pengajuan</th>
+                                    <th>No Hp</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -36,10 +37,11 @@
                                     <td>{{ $data->jurusan }}</td>
                                     <td>{{ $data->participant_count }}</td>
                                     <td>{{ $data->start_date }}</td>
+                                    <td>{{ $data->noHP }}</td>
                                     <td>
                                         @if($data->status == 'accepted')
                                             <button class="btn btn-success">Accepted</button>
-                                        @elseif($data->status == 'proccess')
+                                        @elseif($data->status == 'processed')
                                             <button class="btn btn-warning">Proccess</button>
                                         @elseif($data->status == 'rejected')
                                             <button class="btn btn-danger">Rejected</button>

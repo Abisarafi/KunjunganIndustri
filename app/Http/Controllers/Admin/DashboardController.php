@@ -13,7 +13,18 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $bookings = Booking::all();
+        $bookings = Booking::join('users', 'bookings.user_id', '=', 'users.id')
+        ->get([
+            'bookings.id',
+            'bookings.title',
+            'bookings.jurusan',
+            'bookings.status',
+            'bookings.participant_count',
+            'bookings.start_date',
+            'bookings.end_date',
+            'bookings.color',
+            'users.noHP'
+        ]);
        
         return view('admin.dashboard', [
             'bookings' => $bookings,

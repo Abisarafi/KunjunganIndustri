@@ -21,6 +21,7 @@
                     <th>Jurusan</th>
                     <th>Jumlah Kelas</th>
                     <th>Tanggal Pengajuan</th>
+                    <th>No Hp</th>
                     <th>Status</th>
                 </tr>
             </thead>
@@ -32,6 +33,7 @@
                     <td>{{ $data->jurusan }}</td>
                     <td>{{ $data->participant_count }}</td>
                     <td>{{ $data->start_date }}</td>
+                    <td>{{ $data->noHP }}</td>
                     <td>
                         @if($data->status == 'accepted')
                             <button class="btn btn-success">Accepted</button>
