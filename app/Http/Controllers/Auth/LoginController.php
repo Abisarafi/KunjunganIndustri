@@ -22,7 +22,7 @@ class LoginController extends Controller
     {
         // Check the user's role and redirect accordingly
         if ($user->role === 'admin') {
-            return redirect()->route('admin.calendar.index');
+            return redirect()->route('dashboard.index');
         } elseif ($user->role === 'client') {
             return redirect()->route('calendar.index');
         }
