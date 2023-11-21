@@ -8,6 +8,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CalendarController;
 
+use App\Http\Controllers\Admin\DashboardController as DashboardAdminController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -24,12 +26,12 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'authenticated']);
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+// Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+// Route::post('/login', [LoginController::class, 'authenticated']);
+// Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [RegisterController::class, 'register']);
+// Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+// Route::post('/register', [RegisterController::class, 'register']);
 
 
 Auth::routes();
@@ -47,11 +49,25 @@ Route::group(['middleware' => ['auth', 'client']], function () {
 });
 
 //admin
-Route::group(['middleware' => ['auth', 'admin']], function () {
-    Route::get('admin/calendar/index', [AdminController::class, 'index'])->name('admin.calendar.index');
-    // Route::get('calendar/show/{id}', [AdminController::class, 'changeStatus'])->name('calendar.show');
-    // Route::post('admin/calendar/status', [AdminController::class, 'updateBookingStatus'])->name('admin.calendar.status');
-    // Route::post('/admin/calendar/update-booking-status', [AdminController::class, 'updateBookingStatus'])->name('admin.calendar.update-booking-status');
-    Route::post('admin/calendar/status-accept', [AdminController::class, 'accept'])->name('admin.calendar.accept');
-    Route::post('admin/calendar/status-reject', [AdminController::class, 'reject'])->name('admin.calendar.reject');
+Route::prefix('admin')
+    ->middleware(['auth', 'admin']) 
+    ->group(function(){
+        Route::get('calendar/index', [AdminController::class, 'index'])->name('admin.calendar.index');
+        Route::post('calendar/status-accept', [AdminController::class, 'accept'])->name('admin.calendar.accept');
+        Route::post('calendar/status-reject', [AdminController::class, 'reject'])->name('admin.calendar.reject');
+        //
+        Route::resource('dashboard', DashboardAdminController::class);
 });
+
+// Route::group(['middleware' => ['auth', 'admin']], function () {
+//     Route::get('admin/calendar/index', [AdminController::class, 'index'])->name('admin.calendar.index');
+//     // Route::get('calendar/show/{id}', [AdminController::class, 'changeStatus'])->name('calendar.show');
+//     // Route::post('admin/calendar/status', [AdminController::class, 'updateBookingStatus'])->name('admin.calendar.status');
+//     // Route::post('/admin/calendar/update-booking-status', [AdminController::class, 'updateBookingStatus'])->name('admin.calendar.update-booking-status');
+//     Route::post('admin/calendar/status-accept', [AdminController::class, 'accept'])->name('admin.calendar.accept');
+//     Route::post('admin/calendar/status-reject', [AdminController::class, 'reject'])->name('admin.calendar.reject');
+
+
+// });
+
+
