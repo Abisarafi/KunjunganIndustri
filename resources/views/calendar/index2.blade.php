@@ -226,7 +226,7 @@
                                         $('#bookingModal').modal('toggle');
                                     } else {
                                         // Show a popup message indicating that booking is not allowed
-                                        alert('Booking is not allowed in a week with accepted bookings.');
+                                        alert('Sudah ada kunjungan industri di minggu ini, silahkan pilih tanggal lainnya.');
                                         location.reload();
                                     }
                                 } else {
@@ -236,12 +236,12 @@
                                 }
                             } else {
                                 // Show a popup message indicating that booking is not allowed
-                                alert('Booking is not allowed in a weekends.');
+                                alert('Kami libur hari minggu, silahkan pilih hari senin - sabtu.');
                                 location.reload();
                             }
                         } else{
                             // Show a popup message indicating that booking is not allowed
-                            alert('Booking is not allowed before today.');
+                            alert('Tidak boleh mengajukan kunjungan industri sebelum hari ini.');
                             location.reload();
                         }
                         
