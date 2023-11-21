@@ -115,6 +115,7 @@
                     <p><strong>Jurusan :</strong> <span id="booking-jurusan"></span></p>
                     <p><strong>Jumlah Kelas :</strong> <span id="booking-participant-count"></span></p>
                     <p><strong>Tanggal :</strong> <span id="booking-start"></span></p>
+                    <p><strong>Kontak  :</strong> <span id="booking-noHP"></span></p>
                     <p><strong>Status :</strong> <span id="booking-status"></span></p>
                 </div>
                 <div class="modal-footer">
@@ -164,6 +165,7 @@
                 var jurusan = event.jurusan;
                 var status = event.status;
                 var participant_count = event.participant_count;
+                var noHP = event.noHP;
                 var start_date = event.start.format('YYYY-MM-DD');
                 var end_date = event.end.format('YYYY-MM-DD');
                 bookingId = event.id; // Store the selected booking ID when an event is clicked
@@ -174,6 +176,7 @@
                 $('#bookingDetailsModal').modal('show');
                 $('#booking-title').text(title);
                 $('#booking-jurusan').text(jurusan);
+                $('#booking-noHP').text(noHP);
                 $('#booking-status').text(status);
                 $('#booking-participant-count').text(participant_count);
                 $('#booking-start').text(start_date);

@@ -17,9 +17,18 @@ class AdminController extends Controller
     {
         $events = array();
         // $bookings = Booking::all();
-        $bookings = Booking::join('user_id', 'bookings.user_id', '=', 'users.id')
-              		->get(['bookings.id','bookings.title', 'bookings.jurusan', 'bookings.status', 
-                    'bookings.participant_count', 'bookings.start_date', 'bookings.end_date', 'bookings.color', 'users.noHP']);
+        $bookings = Booking::join('users', 'bookings.user_id', '=', 'users.id')
+        ->get([
+            'bookings.id',
+            'bookings.title',
+            'bookings.jurusan',
+            'bookings.status',
+            'bookings.participant_count',
+            'bookings.start_date',
+            'bookings.end_date',
+            'bookings.color',
+            'users.noHP'
+        ]);
         foreach($bookings as $booking) {
 
             $color = null;
@@ -40,6 +49,7 @@ class AdminController extends Controller
                 'participant_count' => $booking->participant_count,
                 'start' => $booking->start_date,
                 'end' => $booking->end_date,
+                'noHP' => $booking->noHP,
                 'color' => $color,
             ];
 
