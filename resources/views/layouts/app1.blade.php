@@ -76,6 +76,12 @@
                 Calendar
               </p>
             </a>
+            <a href="{{ route('admin.calendar.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Laporan
+              </p>
+            </a>
             <a class="dropdown-item" href="{{ route('logout') }}"
                 onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">
@@ -129,7 +135,7 @@
 <script src="{{ asset('/plugins/moment/moment.min.js') }}"></script>
 <script src="{{ asset('/plugins/fullcalendar/main.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="{{ asset('/dist/js/demo.js') }}"></script>
+{{-- <script src="{{ asset('/dist/js/demo.js') }}"></script> --}}
 
 
 </body>
