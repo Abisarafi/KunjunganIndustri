@@ -25,8 +25,8 @@
                                     <th>Jurusan</th>
                                     <th>Jumlah Kelas</th>
                                     <th>Tanggal Pengajuan</th>
+                                    <th>No Hp</th>
                                     <th>Status</th>
-                                    <th style="width: 40px">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -37,10 +37,11 @@
                                     <td>{{ $data->jurusan }}</td>
                                     <td>{{ $data->participant_count }}</td>
                                     <td>{{ $data->start_date }}</td>
+                                    <td>{{ $data->noHP }}</td>
                                     <td>
                                         @if($data->status == 'accepted')
                                             <button class="btn btn-success">Accepted</button>
-                                        @elseif($data->status == 'proccess')
+                                        @elseif($data->status == 'processed')
                                             <button class="btn btn-warning">Proccess</button>
                                         @elseif($data->status == 'rejected')
                                             <button class="btn btn-danger">Rejected</button>
@@ -50,22 +51,7 @@
                                         @endif
 
                                     </td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <a href="" class="btn btn-success">Accept</a>
-                                            <a href="" class="btn btn-danger">Reject</a>
-                                             {{-- <form action="{{ route('admin.calendar.accept') }}" method="post">
-                                                @csrf
-                                                <input type="hidden" name="booking_id" value="{{ $data->id }}">
-                                                <button type="submit" class="btn btn-success">Accept</button>
-                                            </form>
-                                           <form action="{{ route('admin.calendar.reject') }}" method="post">
-                                                @csrf
-                                                <input type="hidden" name="booking_id" value="{{ $data->id }}">
-                                                <button type="submit" class="btn btn-danger">Reject</button>
-                                            </form> --}}
-                                        </div>
-                                    </td>
+                                   
                                   </tr>
                                 @endforeach
                             </tbody>
