@@ -20,7 +20,7 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th style="width: 10px">No</th>
+                                    <th style="width: 10px">ID</th>
                                     <th>Instansi</th>
                                     <th>Jurusan</th>
                                     <th>Jumlah Kelas</th>
@@ -51,7 +51,20 @@
 
                                     </td>
                                     <td>
-                                        <button class="btn btn-primary">detail</button>
+                                        <div class="btn-group">
+                                            <a href="" class="btn btn-success">Accept</a>
+                                            <a href="" class="btn btn-danger">Reject</a>
+                                             {{-- <form action="{{ route('admin.calendar.accept') }}" method="post">
+                                                @csrf
+                                                <input type="hidden" name="booking_id" value="{{ $data->id }}">
+                                                <button type="submit" class="btn btn-success">Accept</button>
+                                            </form>
+                                           <form action="{{ route('admin.calendar.reject') }}" method="post">
+                                                @csrf
+                                                <input type="hidden" name="booking_id" value="{{ $data->id }}">
+                                                <button type="submit" class="btn btn-danger">Reject</button>
+                                            </form> --}}
+                                        </div>
                                     </td>
                                   </tr>
                                 @endforeach

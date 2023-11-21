@@ -43,8 +43,8 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="../index3.html" class="brand-link">
-      <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">AdminLTE 3</span>
+      <img src="{{ asset('assets/images/logo_cleon.png') }}" alt="AdminLTE Logo" class="brand-image">
+      <span class="brand-text font-weight-light">Panel Admin</span>
     </a>
 
     <!-- Sidebar -->
@@ -74,6 +74,12 @@
               <i class="nav-icon far fa-calendar-alt"></i>
               <p>
                 Calendar
+              </p>
+            </a>
+            <a href="{{ route('admin.calendar.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Laporan
               </p>
             </a>
             <a class="dropdown-item" href="{{ route('logout') }}"
@@ -129,7 +135,7 @@
 <script src="{{ asset('/plugins/moment/moment.min.js') }}"></script>
 <script src="{{ asset('/plugins/fullcalendar/main.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="{{ asset('/dist/js/demo.js') }}"></script>
+{{-- <script src="{{ asset('/dist/js/demo.js') }}"></script> --}}
 
 
 </body>
