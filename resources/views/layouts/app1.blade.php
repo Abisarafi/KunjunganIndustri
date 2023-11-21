@@ -76,7 +76,7 @@
                 Calendar
               </p>
             </a>
-            <a href="{{ route('admin.calendar.index') }}" class="nav-link">
+            <a href="{{ route('admin.laporan') }}" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 Laporan

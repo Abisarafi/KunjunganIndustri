@@ -9,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CalendarController;
 
 use App\Http\Controllers\Admin\DashboardController as DashboardAdminController;
+use App\Http\Controllers\Admin\LaporanController as LaporanAdminController;
 
 
 /*
@@ -57,6 +58,9 @@ Route::prefix('admin')
         Route::post('calendar/status-reject', [AdminController::class, 'reject'])->name('admin.calendar.reject');
         //
         Route::resource('dashboard', DashboardAdminController::class);
+
+        Route::get('laporan', [LaporanAdminController::class, 'index'])->name('admin.laporan');
+        Route::get('exportlaporan', [LaporanAdminController::class, 'export'])->name('admin.export');
 });
 
 // Route::group(['middleware' => ['auth', 'admin']], function () {
