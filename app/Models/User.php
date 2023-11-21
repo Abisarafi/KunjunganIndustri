@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\Pengajuan;
 use App\Models\Booking;
 
 class User extends Authenticatable
@@ -23,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'role',
+        'noHP',
         'password',
         'votes',
     ];

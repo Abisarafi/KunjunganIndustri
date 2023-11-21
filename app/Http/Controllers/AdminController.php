@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Pengajuan;
 use App\Models\Booking;
 
 class AdminController extends Controller
@@ -12,7 +11,19 @@ class AdminController extends Controller
     public function index()
     {
         $events = array();
-        $bookings = Booking::all();
+        // $bookings = Booking::all();
+        $bookings = Booking::join('users', 'bookings.user_id', '=', 'users.id')
+        ->get([
+            'bookings.id',
+            'bookings.title',
+            'bookings.jurusan',
+            'bookings.status',
+            'bookings.participant_count',
+            'bookings.start_date',
+            'bookings.end_date',
+            'bookings.color',
+            'users.noHP'
+        ]);
         foreach($bookings as $booking) {
 
             $color = null;
@@ -22,6 +33,8 @@ class AdminController extends Controller
             if ($booking->status == 'accepted') {
                 $color = '#48EB12';
             }
+
+            
             
             $events[] = [
                 'id'   => $booking->id,
@@ -31,6 +44,7 @@ class AdminController extends Controller
                 'participant_count' => $booking->participant_count,
                 'start' => $booking->start_date,
                 'end' => $booking->end_date,
+                'noHP' => $booking->noHP,
                 'color' => $color,
             ];
 
@@ -39,7 +53,7 @@ class AdminController extends Controller
         // return view('admin.calendarPengajuan', ['events' => $events]);
     }
 
-
+  
     public function accept(Request $request)
     {
         $bookingId = $request->input('booking_id');
