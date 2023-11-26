@@ -26,7 +26,7 @@
       <form action="/register" method="POST">
         @csrf
         <div class="input-group mb-3">
-          <input id="name" type="text" placeholder="Your Name" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus">
+          <input id="name" type="text" placeholder="Your Name" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-user"></span>
@@ -34,37 +34,50 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="email" name="email" value="{{ old('email') }}" class="form-control" placeholder="your-email@gmail.com" id="email" required autocomplete="email" autofocus>
+          <input type="email" name="email" placeholder="Your Email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required autocomplete="email">
           <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-envelope"></span>
-            </div>
+              <div class="input-group-text">
+                  <span class="fas fa-envelope"></span>
+              </div>
           </div>
-        </div>
+          @error('email')
+              <div class="invalid-feedback" role="alert">
+                  <strong>{{ $message }}</strong>
+              </div>
+          @enderror
+      </div>
         <div class="input-group mb-3">
           <input type="password" name="password" placeholder="Your Password" id="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
           <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
-            </div>
+              <div class="input-group-text">
+                  <span class="fas fa-lock"></span>
+              </div>
           </div>
-        </div>
-        <div class="input-group mb-3">
-          <input id="password-confirm" type="password" placeholder="Your Password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+      </div>
+      <div class="input-group mb-3">
+          <input id="password-confirm" type="password" placeholder="Confirm Password" class="form-control" name="password_confirmation" required autocomplete="new-password">
           <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
-            </div>
+              <div class="input-group-text">
+                  <span class="fas fa-lock"></span>
+              </div>
           </div>
-        </div>
-        <div class="input-group mb-3">
-          <input id="noHP" type="text" placeholder="Nomor Whatsapp yang bisa dihubungi" class="form-control @error('noHP') is-invalid @enderror" name="noHP" value="{{ old('noHP') }}" required autocomplete="noHP" autofocus">
-          <div class="input-group-append">
+      </div>
+      <div id="password-mismatch" class="alert alert-danger" style="display: none;">
+          Passwords do not match!
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" name="noHP" placeholder="Your Telephone Number" id="noHP" class="form-control @error('noHP') is-invalid @enderror" value="{{ old('noHP') }}" required autocomplete="tel">
+        <div class="input-group-append">
             <div class="input-group-text">
-              <span class="fas fa-phone"></span>
+                <span class="fas fa-phone"></span>
             </div>
-          </div>
         </div>
+        @error('noHP')
+            <div class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </div>
+        @enderror
+    </div>
         <div class="row">
           <!-- /.col -->
           <div class="col-4">
@@ -88,5 +101,25 @@
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Add an event listener to the password confirmation field
+        $('#password-confirm').on('keyup', function () {
+            // Get the values of both password fields
+            var password = $('#password').val();
+            var confirmPassword = $(this).val();
+
+            // Check if the passwords match
+            if (password !== confirmPassword) {
+                // Show the password mismatch notification
+                $('#password-mismatch').show();
+            } else {
+                // Hide the password mismatch notification if the passwords match
+                $('#password-mismatch').hide();
+            }
+        });
+    });
+</script>
 </body>
 </html>

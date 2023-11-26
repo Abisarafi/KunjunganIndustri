@@ -117,6 +117,7 @@
                     <p><strong>Tanggal :</strong> <span id="booking-start"></span></p>
                     <p><strong>Kontak  :</strong> <span id="booking-noHP"></span></p>
                     <p><strong>Status :</strong> <span id="booking-status"></span></p>
+                    <p><strong>Dokumen :</strong> <a href="#" id="download-link" target="_blank">Download File</a></p>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success" id="accept-booking">Accept</button>
@@ -202,6 +203,14 @@
                 // Handle the "x" button click
                 $('#close').click(function() {
                     $('#bookingDetailsModal').modal('hide'); // Hide the modal here
+                });
+
+                // Update the download link when an event is clicked
+                var downloadLink = $('#download-link');
+                downloadLink.attr('href', "{{ url('admin/download-file') }}/" + bookingId);
+                downloadLink.off('click'); // Remove any previous click handlers
+                downloadLink.on('click', function (e) {
+                    e.stopPropagation(); // Prevent the modal from closing when clicking the download link
                 });
 
             },

@@ -112,6 +112,10 @@
                 <option value="1">1 Kelas</option>
                 <option value="2">2 Kelas</option>
             </select>
+            <div class="mb-3">
+                <label for="document" class="form-label">Upload Document</label>
+                <input type="file" class="form-control" id="document" name="document">
+             </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -249,66 +253,73 @@
             });
                 
                 // Booking submission logic
-
                 $('#saveBtn').click(function() {
-                var title = $('#title').val();
-                var jurusan = $('#jurusan').val();
-                var participant_count = $('#participant_count').val();
-                var status = "processed";
-                var start_date = moment(start).format('YYYY-MM-DD');
-                var end_date = moment(end).format('YYYY-MM-DD');
-                var kelas = jurusan; // Assuming that 'jurusan' contains the class name
+                    var title = $('#title').val();
+                    var jurusan = $('#jurusan').val();
+                    var participant_count = $('#participant_count').val();
+                    var status = "processed";
+                    var start_date = moment(start).format('YYYY-MM-DD');
+                    var end_date = moment(end).format('YYYY-MM-DD');
+                    var kelas = jurusan; // Assuming that 'jurusan' contains the class name
 
-                // Define the maximum participant counts for each class
-                var maxCounts = {
-                    'TKJ': 2,
-                    'SIJA': 2,
-                    'TJA': 2,
-                    'MM': 1,
-                    'RPL': 1,
-                    'Broadcasting': 1,
-                };
+                    // Define the maximum participant counts for each class
+                    var maxCounts = {
+                        'TKJ': 2,
+                        'SIJA': 2,
+                        'TJA': 2,
+                        'MM': 1,
+                        'RPL': 1,
+                        'Broadcasting': 1,
+                    };
 
-                if (participant_count <= maxCounts[kelas]) {
-                    $.ajax({
-                        url: "{{ route('calendar.store') }}",
-                        type: "POST",
-                        dataType: 'json',
-                        data: {
-                            title,
-                            start_date,
-                            end_date,
-                            jurusan,
-                            participant_count,
-                            status,
-                        },
-                        success: function(response) {
-                            $('#bookingModal').modal('hide');
-                            $('#calendar').fullCalendar('renderEvent', {
-                                'title': response.title,
-                                'jurusan': response.jurusan,
-                                'participant_count': response.participant_count,
-                                'status': response.status,
-                                'start': response.start,
-                                'end': response.end,
-                                'color': response.color
-                            });
+                    if (participant_count <= maxCounts[kelas]) {
+                        // Add the following lines inside your click event for #saveBtn
+                        var documentFile = $('#document')[0].files[0];
+
+                        var formData = new FormData();
+                        formData.append('document', documentFile);
+                        formData.append('title', title);
+                        formData.append('start_date', start_date);
+                        formData.append('end_date', end_date);
+                        formData.append('jurusan', jurusan);
+                        formData.append('participant_count', participant_count);
+                        formData.append('status', status);
+
+                        $.ajax({
+                            url: "{{ route('calendar.store') }}",
+                            type: "POST",
+                            dataType: 'json',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(response) {
+                                $('#bookingModal').modal('hide');
+                                $('#calendar').fullCalendar('renderEvent', {
+                                    'title': response.title,
+                                    'jurusan': response.jurusan,
+                                    'participant_count': response.participant_count,
+                                    'status': response.status,
+                                    'start': response.start,
+                                    'end': response.end,
+                                    'color': response.color
+                                });
+                                location.reload();
+                            },
+                            error: function(error) {
+                                if (error.responseJSON.errors) {
+                                    $('#titleError').html(error.responseJSON.errors.title);
+                                }
+                            },
+                        });
+                    } else {
+                        alert('jurusan RPL, MM, dan Broadcasting hanya boleh 1 kelas.');
+                        // Delay the location.reload by 5 seconds (5000 milliseconds)
+                        setTimeout(function() {
                             location.reload();
-                        },
-                        error: function(error) {
-                            if (error.responseJSON.errors) {
-                                $('#titleError').html(error.responseJSON.errors.title);
-                            }
-                        },
-                    });
-                } else {
-                    alert('jurusan RPL, MM, dan Broadcasting hanya boleh 1 kelas.');
-                    // Delay the location.reload by 5 seconds (1000 milliseconds)
-                    setTimeout(function() {
-                        location.reload();
-                    }, 1000);
-                }
-            });
+                        }, 5000);
+                    }
+                });
+
               
     },
                

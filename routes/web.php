@@ -49,6 +49,9 @@ Route::prefix('admin')
 
         Route::get('laporan', [LaporanAdminController::class, 'index'])->name('admin.laporan');
         Route::get('exportlaporan', [LaporanAdminController::class, 'export'])->name('admin.export');
+        // route download file proposal dari client
+        Route::get('download-file/{id}', [AdminController::class, 'downloadFile'])->name('admin.downloadFile');
+
 });
 
 
