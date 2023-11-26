@@ -57,15 +57,23 @@ class CalendarController extends Controller
             'title' => 'required|string',
             'jurusan' => 'required|in:TKJ,SIJA,TJA,MM,RPL,Broadcasting',
             'participant_count' => 'required|in:1,2',
-            'start_date' => 'required|date',
+            'start_date' => ['required', 'date', new NotPastDateRule, new NotToday],
             'end_date' => ['required', 'date', 'after:start_date'],
+            'document' => 'file|mimes:pdf|max:2048', // Add validation rules for the document file
         ]);
 
         $user = auth()->user();
 
-        // Get the currently authenticated user
-        $user = auth()->user();
+        // Handle file upload
+        if ($request->hasFile('document')) {
+            $file = $request->file('document');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/documents', $fileName); // Save in the public/documents directory
+        } else {
+            $fileName = null; // Set to null if no file is uploaded
+        }
 
+        // Create booking with file information
         $booking = Booking::create([
             'title' => $request->title,
             'jurusan' => $request->jurusan,
@@ -73,11 +81,9 @@ class CalendarController extends Controller
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'status' => $request->status,
-            'user_id' => $user->id
+            'document' => $fileName, // Save the file name in the 'document' column
+            'user_id' => $user->id,
         ]);
-
-        
-        
 
         return response()->json([
             'id' => $booking->id,
@@ -87,11 +93,12 @@ class CalendarController extends Controller
             'participant_count' => $booking->participant_count,
             'jurusan' => $booking->jurusan,
             'status' => $booking->status,
+            'document' => $fileName, // Include the file name in the response
         ]);
-        
     }
 
 
+    
     
 
 
@@ -131,7 +138,7 @@ class CalendarController extends Controller
 
         // Check if selected date is more than 7 days from today
         $daysDifference = $selectedDate->diffInDays(now());
-        $isMoreThan7Days = $daysDifference > 7;
+        $isMoreThan7Days = $daysDifference >= 7;
 
         return response()->json([
             'hasAcceptedBookings' => $hasAcceptedBookings,

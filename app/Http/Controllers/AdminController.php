@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Booking;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -51,6 +52,24 @@ class AdminController extends Controller
         }
         return view('admin.index2', ['events' => $events]);
         // return view('admin.calendarPengajuan', ['events' => $events]);
+    }
+
+    public function downloadFile($bookingId)
+    {
+        $booking = Booking::find($bookingId);
+
+        if (!$booking) {
+            return response()->json(['error' => 'Booking not found'], 404);
+        }
+
+        $filePath = storage_path('app/public/documents/' . $booking->document);
+
+        // Check if the file exists
+        if (file_exists($filePath)) {
+            return response()->download($filePath, $booking->document_original_name);
+        } else {
+            return response()->json(['error' => 'File not found'], 404);
+        }
     }
 
   

@@ -17,6 +17,7 @@ class Booking extends Model
         'status',
         'user_id',
         'color',
+        'document'
     ];
 
     // public function pengajuan()
