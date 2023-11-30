@@ -54,6 +54,8 @@ class AdminController extends Controller
         // return view('admin.calendarPengajuan', ['events' => $events]);
     }
 
+    
+
     public function downloadFile($bookingId)
     {
         $booking = Booking::find($bookingId);
@@ -72,9 +74,31 @@ class AdminController extends Controller
         }
     }
 
-  
+    public function rejectOtherBookingsInSameWeek(Booking $acceptedBooking)
+    {
+        // Find other bookings in the same week with status 'processed' or 'accepted'
+        $otherBookings = Booking::whereIn('status', ['processed', 'accepted'])
+            ->where(function ($query) use ($acceptedBooking) {
+                $query->whereBetween('start_date', [$acceptedBooking->start_date, $acceptedBooking->end_date])
+                    ->orWhereBetween('end_date', [$acceptedBooking->start_date, $acceptedBooking->end_date]);
+            })
+            ->where('id', '!=', $acceptedBooking->id)
+            ->get();
+
+        // Update the status of other bookings to 'rejected'
+        foreach ($otherBookings as $booking) {
+            $booking->status = 'rejected';
+            $booking->save();
+        }
+    }
+
     public function accept(Request $request)
     {
+        // Validate input data
+        $request->validate([
+            'booking_id' => 'required|exists:bookings,id',
+        ]);
+
         $bookingId = $request->input('booking_id');
         $status = 'accepted';
         $color = '#48EB12';
@@ -85,6 +109,9 @@ class AdminController extends Controller
             return response()->json(['error' => 'Booking not found'], 404);
         }
 
+        // Update the status of other bookings in the same week to 'rejected'
+        $this->rejectOtherBookingsInSameWeek($booking);
+
         // Update the status of the accepted booking to 'accepted'
         $booking->status = $status;
         $booking->color = $color;
@@ -92,6 +119,7 @@ class AdminController extends Controller
 
         return response()->json(['status' => $status, 'color' => $color]);
     }
+
     
 
     public function reject(Request $request)
