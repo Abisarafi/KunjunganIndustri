@@ -138,7 +138,7 @@ class CalendarController extends Controller
 
         // Check if selected date is more than 7 days from today
         $daysDifference = $selectedDate->diffInDays(now());
-        $isMoreThan7Days = $daysDifference >= 7;
+        $isMoreThan7Days = $daysDifference >= 6;
 
         return response()->json([
             'hasAcceptedBookings' => $hasAcceptedBookings,
