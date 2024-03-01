@@ -11,7 +11,7 @@ class LaporanController extends Controller
 {
     public function index(){
         //menampilkan halaman laporan
-        $bookings = Booking::all();
+        $bookings = Booking::with('user')->get();
          return view('admin.laporan', [
             'bookings' => $bookings,
             
@@ -21,7 +21,7 @@ class LaporanController extends Controller
     public function export(){
         //mengambil data dan tampilan dari halaman laporan_pdf
         //data di bawah ini bisa kalian ganti nantinya dengan data dari database
-        $bookings = Booking::all();
+        $bookings = Booking::with('user')->get();
         $data = PDF::loadview('admin.laporan_pdf', [
             'data' => 'List Seluruh Pengajuan',
             'bookings' => $bookings

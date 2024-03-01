@@ -33,7 +33,7 @@
                     <td>{{ $data->jurusan }}</td>
                     <td>{{ $data->participant_count }}</td>
                     <td>{{ $data->start_date }}</td>
-                    <td>{{ $data->noHP }}</td>
+                    <td>{{ $data->user->noHP }}</td>
                     <td>
                         @if($data->status == 'accepted')
                             <button class="btn btn-success">Accepted</button>
