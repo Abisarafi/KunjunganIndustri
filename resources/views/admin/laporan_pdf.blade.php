@@ -43,7 +43,7 @@
 </head>
 <body>
     <div class="container mt-4">        
-        <h3 class="alert alert-success">{{ $data }}</h3>
+        <h3 class="text-center">{{ $data }}</h3>
         <table class="table">
             <thead>
                 <tr>
